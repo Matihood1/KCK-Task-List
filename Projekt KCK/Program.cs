@@ -621,17 +621,23 @@ namespace ListaRzeczyTUI
             FrameView SubTasksListFrameView = new FrameView("Subtasks")
             {
                 X = 0,
-                Y = 0,
-                //Y = Pos.Percent(50),
+                //Y = 0,
+                Y = Pos.Percent(50),
                 Width = Dim.Percent(75),
                 Height = Dim.Fill()
+            };
+
+            var SubTasksListLabel = new Label("Title                     End Date          Done")
+            {
+                X = 0,
+                Y = 0
             };
 
             //ListView SubTasksListView = new ListView(selectedtask.SubTasks.Select(x => x.title + (x.isdone ? " Done" : " Not")).ToList())
             ListView SubTasksListView = new ListView(new TasksListDisplay(selectedtask.SubTasks))
             {
                 X = 0,
-                Y = 0,
+                Y = 1,
                 Width = Dim.Fill(),
                 Height = Dim.Fill()
             };
@@ -655,7 +661,7 @@ namespace ListaRzeczyTUI
                 }
             };
 
-            SubTasksListFrameView.Add(SubTasksListView);
+            SubTasksListFrameView.Add(SubTasksListView, SubTasksListLabel);
             win.Add(SubTasksListFrameView, ButtonExit);
 
             // Creates a menubar, the item "New" has a help menu.
@@ -936,16 +942,22 @@ namespace ListaRzeczyTUI
                 Height = Dim.Fill()
             };
 
+            var TasksListLabel = new Label("Title                     End Date      Priority      Done")
+            {
+                X = 0,
+                Y = 0
+            };
+
             //TasksListView = new ListView(Tasks.taskslist.Select(x => x.title + (x.isdone ? " Done" : " Not")).ToList())
             TasksListView = new ListView(new TasksListDisplay(Tasks.taskslist))
             {
                 X = 0,
-                Y = 0,
+                Y = 1,
                 Width = Dim.Fill(),
                 Height = Dim.Fill()
             };
 
-            TasksListFrameView.Add(TasksListView);
+            TasksListFrameView.Add(TasksListView, TasksListLabel);
 
             // Creates a menubar, the item "New" has a help menu.
             var menu = new MenuBar(new MenuBarItem[]
@@ -1165,8 +1177,15 @@ namespace ListaRzeczyTUI
                 }
             };
 
+
+            var ASCIIlabel = new Label("       .@\n     ,@@@@\n   ,@@@.  &@@,\n @@@@   &@@@@@@@\n@@@@   &@&   @@@@\n '.@@@.   .@@@@'\n   '@@@@@@@@@'\n      '@@@'")
+            {
+                X = Pos.Right(TasksListFrameView),
+                Y = Pos.Bottom(ButtonsFrameView) + 5
+            };
+
             ButtonsFrameView.Add(ButtonAdd, ButtonEdit, ButtonDelete);
-            win.Add(TasksListFrameView, ButtonsFrameView);
+            win.Add(TasksListFrameView, ButtonsFrameView, ASCIIlabel);
 
             /*var login = new Label("Login: ") { X = 3, Y = 2 };
             var password = new Label("Password: ")

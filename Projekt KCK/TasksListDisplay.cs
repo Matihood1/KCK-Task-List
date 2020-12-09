@@ -52,7 +52,7 @@ namespace ListaRzeczyTUI
             string s;
             if(TasksList != null)
             {
-                s = string.Format("{0,-25} {1}       {2,-9}    {3}",
+                s = string.Format("{0,-25} {1}      {2,-9}     {3}",
                     Tasks.FormatTitle(TasksList[item], 25) /*TasksList[item].title.Substring(0, TasksList[item].title.Length < 25 ? TasksList[item].title.Length : 22)
                     + (TasksList[item].title.Length < 25 ? "" : "...")*/,
                     TasksList[item].enddate.ToString("dd.MM.yy"), Tasks.priorities[TasksList[item].priority], (TasksList[item].isdone ? "Done" : ""));
@@ -60,7 +60,7 @@ namespace ListaRzeczyTUI
             }
             else
             {
-                s = string.Format("{0,-25} {1}       {2}",
+                s = string.Format("{0,-25} {1}          {2}",
                     Tasks.FormatTitle(SubTasksList[item], 25) /*SubTasksList[item].title.Substring(0, SubTasksList[item].title.Length < 25 ? SubTasksList[item].title.Length : 22)
                     + (SubTasksList[item].title.Length < 25 ? "" : "...")*/,
                     SubTasksList[item].enddate.ToString("dd.MM.yy"), (SubTasksList[item].isdone ? "Done" : ""));
