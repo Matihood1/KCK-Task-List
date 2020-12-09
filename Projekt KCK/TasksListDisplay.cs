@@ -14,6 +14,22 @@ namespace ListaRzeczyTUI
     {
         //Application.Driver.SetAttribute(Application.Driver.MakeAttribute(Color.Black, Color.Cyan));
 
+        private enum priorities
+        {
+            VeryHigh = 0,
+            High = 1,
+            Medium = 2,
+            Low = 3,
+            VeryLow = 4
+        }
+
+        private enum styles
+        {
+            normal = 0,
+            dark = 1,
+            late = 2
+        }
+
         private List<Tasks.Task> TasksList;
         private List<Tasks.SubTask> SubTasksList;
         public int Count => TasksList != null ? TasksList.Count : SubTasksList.Count;
@@ -58,58 +74,58 @@ namespace ListaRzeczyTUI
             int index = 0;
             if(isdone == true)
             {
-                SetColor(container, driver, false, selected, selected ? Color.Green : Color.BrightGreen);
+                SetColor(container, driver, (int)styles.normal, selected, selected ? Color.Green : Color.BrightGreen);
                 /*driver.SetAttribute(driver.MakeAttribute(selected ? Color.Green : Color.BrightGreen, 
                     container.HasFocus ? (selected ? Color.Gray : Color.Blue) : Color.Blue));*/
             }
             else if(date <= DateTime.Now)
             {
-                SetColor(container, driver, true, selected, Color.BrightRed);
+                SetColor(container, driver, (int)styles.late, selected, Color.BrightRed);
                 /*driver.SetAttribute(driver.MakeAttribute(Color.BrightRed, 
                     container.HasFocus ? (selected ? Color.BrightYellow : Color.Red) : Color.Red));*/
             }
             else
             {
-                switch(priority)
+                switch(Enum.GetName(typeof(priorities), priority))
                 {
-                    case 0:
+                    case "VeryHigh":
                         {
-                            SetColor(container, driver, false, selected, selected ? Color.Magenta : Color.BrightMagenta);
+                            SetColor(container, driver, (int)styles.normal, selected, selected ? Color.Magenta : Color.BrightMagenta);
                             /*driver.SetAttribute(driver.MakeAttribute(selected ? Color.Magenta : Color.BrightMagenta, 
                                 container.HasFocus ? (selected ? Color.Gray : Color.Blue) : Color.Blue));*/
                             break;
                         }
-                    case 1:
+                    case "High":
                         {
-                            SetColor(container, driver, false, selected, Color.BrightYellow);
+                            SetColor(container, driver, (int)styles.dark, selected, Color.BrightYellow);
                             /*driver.SetAttribute(driver.MakeAttribute(Color.BrightYellow, 
                                 container.HasFocus ? (selected ? Color.Gray : Color.Blue) : Color.Blue));*/
                             break;
                         }
-                    case 2:
+                    case "Medium":
                         {
-                            SetColor(container, driver, false, selected, Color.BrighCyan);
+                            SetColor(container, driver, (int)styles.dark, selected, Color.BrighCyan);
                             /*driver.SetAttribute(driver.MakeAttribute(Color.BrighCyan, 
                                 container.HasFocus ? (selected ? Color.Gray : Color.Blue) : Color.Blue));*/
                             break;
                         }
-                    case 3:
+                    case "Low":
                         {
-                            SetColor(container, driver, false, selected, Color.Cyan);
+                            SetColor(container, driver, (int)styles.normal, selected, Color.Cyan);
                             /*driver.SetAttribute(driver.MakeAttribute(Color.Cyan, 
                                 container.HasFocus ? (selected ? Color.Gray : Color.Blue) : Color.Blue));*/
                             break;
                         }
-                    case 4:
+                    case "VeryLow":
                         {
-                            SetColor(container, driver, false, selected, selected ? Color.Black : Color.DarkGray);
+                            SetColor(container, driver, (int)styles.normal, selected, selected ? Color.Black : Color.DarkGray);
                             /*driver.SetAttribute(driver.MakeAttribute(selected ? Color.Black : Color.DarkGray, 
                                 container.HasFocus ? (selected ? Color.Gray : Color.Blue) : Color.Blue));*/
                             break;
                         }
                     default:
                         {
-                            SetColor(container, driver, false, selected, selected ? Color.Black : Color.White);
+                            SetColor(container, driver, (int)styles.normal, selected, selected ? Color.Black : Color.White);
                             /*driver.SetAttribute(driver.MakeAttribute(selected ? Color.Black : Color.White, 
                                 container.HasFocus ? (selected ? Color.Gray : Color.Blue) : Color.Blue));*/
                             break;
@@ -135,15 +151,25 @@ namespace ListaRzeczyTUI
             driver.SetAttribute(Application.Driver.MakeAttribute(Color.Black, Color.Blue));
         }
 
-        private void SetColor (ListView container, ConsoleDriver driver, bool islate, bool selected, Color color)
+        private void SetColor (ListView container, ConsoleDriver driver, int style, bool selected, Color color)
         {
-            if(islate == true)
+            switch(Enum.GetName(typeof(styles), style))
             {
-                driver.SetAttribute(driver.MakeAttribute(color, container.HasFocus ? (selected ? Color.BrightYellow : Color.Red) : Color.Red));
-            }
-            else
-            {
-                driver.SetAttribute(driver.MakeAttribute(color, container.HasFocus ? (selected ? Color.Gray : Color.Blue) : Color.Blue));
+                case "normal":
+                    {
+                        driver.SetAttribute(driver.MakeAttribute(color, container.HasFocus ? (selected ? Color.Gray : Color.Blue) : Color.Blue));
+                        break;
+                    }
+                case "dark":
+                    {
+                        driver.SetAttribute(driver.MakeAttribute(color, container.HasFocus ? (selected ? Color.DarkGray : Color.Blue) : Color.Blue));
+                        break;
+                    }
+                case "late":
+                    {
+                        driver.SetAttribute(driver.MakeAttribute(color, container.HasFocus ? (selected ? Color.BrightYellow : Color.Red) : Color.Red));
+                        break;
+                    }
             }
         }
 

@@ -46,7 +46,7 @@ namespace ListaRzeczyTUI
                 Width = Dim.Fill() - 3
             };
 
-            var TaskEndDateField = new DateField(DateTime.Now.AddDays(1))
+            var TaskEndDateField = new DateField(DateTime.Today.AddDays(1))
             {
                 X = Pos.Right(TaskDescriptionLabel),
                 Y = Pos.Top(TaskEndDateLabel),
@@ -353,7 +353,7 @@ namespace ListaRzeczyTUI
                 Width = Dim.Fill() - 3
             };
 
-            var TaskEndDateField = new DateField(DateTime.Now.AddDays(1))
+            var TaskEndDateField = new DateField(DateTime.Today.AddDays(1))
             {
                 X = Pos.Right(TaskDescriptionLabel),
                 Y = Pos.Top(TaskEndDateLabel),
@@ -599,6 +599,7 @@ namespace ListaRzeczyTUI
         }
         static private void TaskDetails(Tasks.Task selectedtask)
         {
+            int lastsort = 3;
             var NewTop = new Toplevel(Application.Top.Frame);
 
             Window win = new Window("Details: " + Tasks.FormatTitle(selectedtask, 43))
@@ -675,44 +676,52 @@ namespace ListaRzeczyTUI
                 }),
                 new MenuBarItem ("_Order", new MenuItem []
                 {
-                    new MenuItem ("Title asc.", "Orders by title ascending", () =>
+                    new MenuItem ("Title asc.", "", () =>
                     {
-                        selectedtask.SortByTitle(true);
+                        selectedtask.SortSubTasks(0);
+                        lastsort = 0;
                         SubTasksListView.SetNeedsDisplay();
                     }),
-                    new MenuItem ("Title desc.", "Orders by title descending", () =>
+                    new MenuItem ("Title desc.", "", () =>
                     {
-                        selectedtask.SortByTitle(false);
+                        selectedtask.SortSubTasks(1);
+                        lastsort = 1;
                         SubTasksListView.SetNeedsDisplay();
                     }),
-                    new MenuItem ("Creation Date asc.", "Orders by creation date ascending", () =>
+                    new MenuItem ("Creation Date asc.", "", () =>
                     {
-                        selectedtask.SortByCreationDate(true);
+                        selectedtask.SortSubTasks(2);
+                        lastsort = 2;
                         SubTasksListView.SetNeedsDisplay();
                     }),
-                    new MenuItem ("Creation Date desc.", "Orders by creation date descending", () =>
+                    new MenuItem ("Creation Date desc.", "", () =>
                     {
-                        selectedtask.SortByCreationDate(false);
+                        selectedtask.SortSubTasks(3);
+                        lastsort = 3;
                         SubTasksListView.SetNeedsDisplay();
                     }),
-                    new MenuItem ("End Date asc.", "Orders by end date ascending and then by title", () =>
+                    new MenuItem ("End Date asc.", "", () =>
                     {
-                        selectedtask.SortByEndDate(true);
+                        selectedtask.SortSubTasks(4);
+                        lastsort = 4;
                         SubTasksListView.SetNeedsDisplay();
                     }),
-                    new MenuItem ("End Date desc.", "Orders by end date descending and then by title", () =>
+                    new MenuItem ("End Date desc.", "", () =>
                     {
-                        selectedtask.SortByEndDate(false);
+                        selectedtask.SortSubTasks(5);
+                        lastsort = 5;
                         SubTasksListView.SetNeedsDisplay();
                     }),
-                    new MenuItem ("Done asc.", "Orders by done status ascending and then by title", () =>
+                    new MenuItem ("Done asc.", "", () =>
                     {
-                        selectedtask.SortByDone(true);
+                        selectedtask.SortSubTasks(6);
+                        lastsort = 6;
                         SubTasksListView.SetNeedsDisplay();
                     }),
-                    new MenuItem ("Done desc.", "Orders by done status descending and then by title", () =>
+                    new MenuItem ("Done desc.", "", () =>
                     {
-                        selectedtask.SortByDone(false);
+                        selectedtask.SortSubTasks(7);
+                        lastsort = 7;
                         SubTasksListView.SetNeedsDisplay();
                     }),
                 })
@@ -756,6 +765,7 @@ namespace ListaRzeczyTUI
                 if (AddSubTask(selectedtask) == true)
                 {
                     //SubTasksListView.SetSource(selectedtask.SubTasks.Select(x => x.title + (x.isdone ? " Done" : " Not")).ToList());
+                    selectedtask.SortSubTasks(lastsort);
                     SubTasksListView.SetNeedsDisplay();
                     ButtonEdit.ColorScheme = ButtonEdit.SuperView.ColorScheme;
                     ButtonDelete.ColorScheme = ButtonDelete.SuperView.ColorScheme;
@@ -769,6 +779,7 @@ namespace ListaRzeczyTUI
                     if (AddSubTask(selectedtask) == true)
                     {
                         //SubTasksListView.SetSource(selectedtask.SubTasks.Select(x => x.title + (x.isdone ? " Done" : " Not")).ToList());
+                        selectedtask.SortSubTasks(lastsort);
                         SubTasksListView.SetNeedsDisplay();
                         ButtonEdit.ColorScheme = ButtonEdit.SuperView.ColorScheme;
                         ButtonDelete.ColorScheme = ButtonDelete.SuperView.ColorScheme;
@@ -898,6 +909,7 @@ namespace ListaRzeczyTUI
             Colors.ColorSchemes["Inactive"].Focus = Colors.ColorSchemes["Inactive"].Normal;
             Colors.ColorSchemes["Inactive"].HotNormal = Colors.ColorSchemes["Inactive"].Normal;
             Colors.ColorSchemes["Inactive"].HotFocus = Colors.ColorSchemes["Inactive"].Normal;
+            int lastsort = 3;
             //TasksListDisplay tasksListDisplay = new TasksListDisplay(Tasks.taskslist);
 
             var top = Application.Top;
@@ -953,54 +965,64 @@ namespace ListaRzeczyTUI
                 }),
                 new MenuBarItem ("_Order", new MenuItem []
                 {
-                    new MenuItem ("Title asc.", "Orders by title ascending", () =>
+                    new MenuItem ("Title asc.", "", () =>
                     {
-                        Tasks.SortByTitle(true);
+                        Tasks.SortTasks(0);
+                        lastsort = 0;
                         TasksListView.SetNeedsDisplay();
                     }),
-                    new MenuItem ("Title desc.", "Orders by title descending", () =>
+                    new MenuItem ("Title desc.", "", () =>
                     {
-                        Tasks.SortByTitle(false);
+                        Tasks.SortTasks(1);
+                        lastsort = 1;
                         TasksListView.SetNeedsDisplay();
                     }),
-                    new MenuItem ("Creation Date asc.", "Orders by creation date ascending", () =>
+                    new MenuItem ("Creation Date asc.", "", () =>
                     {
-                        Tasks.SortByCreationDate(true);
+                        Tasks.SortTasks(2);
+                        lastsort = 2;
                         TasksListView.SetNeedsDisplay();
                     }),
-                    new MenuItem ("Creation Date desc.", "Orders by creation date descending", () =>
+                    new MenuItem ("Creation Date desc.", "", () =>
                     {
-                        Tasks.SortByCreationDate(false);
+                        Tasks.SortTasks(3);
+                        lastsort = 3;
                         TasksListView.SetNeedsDisplay();
                     }),
-                    new MenuItem ("End Date asc.", "Orders by end date ascending and then by title", () =>
+                    new MenuItem ("End Date asc.", "", () =>
                     {
-                        Tasks.SortByEndDate(true);
+                        Tasks.SortTasks(4);
+                        lastsort = 4;
                         TasksListView.SetNeedsDisplay();
                     }),
-                    new MenuItem ("End Date desc.", "Orders by end date descending and then by title", () =>
+                    new MenuItem ("End Date desc.", "", () =>
                     {
-                        Tasks.SortByEndDate(false);
+                        Tasks.SortTasks(5);
+                        lastsort = 5;
                         TasksListView.SetNeedsDisplay();
                     }),
-                    new MenuItem ("Priority asc.", "Orders by priority ascending", () =>
+                    new MenuItem ("Priority asc.", "", () =>
                     {
-                        Tasks.SortByPriority(true);
+                        Tasks.SortTasks(6);
+                        lastsort = 6;
                         TasksListView.SetNeedsDisplay();
                     }),
-                    new MenuItem ("Priority desc.", "Orders by priority descending", () =>
+                    new MenuItem ("Priority desc.", "", () =>
                     {
-                        Tasks.SortByPriority(false);
+                        Tasks.SortTasks(7);
+                        lastsort = 7;
                         TasksListView.SetNeedsDisplay();
                     }),
-                    new MenuItem ("Done asc.", "Orders by the done status ascending and then by title", () =>
+                    new MenuItem ("Done asc.", "", () =>
                     {
-                        Tasks.SortByDone(true);
+                        Tasks.SortTasks(8);
+                        lastsort = 8;
                         TasksListView.SetNeedsDisplay();
                     }),
-                    new MenuItem ("Done desc.", "Orders by the done status descending and then by title", () =>
+                    new MenuItem ("Done desc.", "", () =>
                     {
-                        Tasks.SortByDone(false);
+                        Tasks.SortTasks(8);
+                        lastsort = 9;
                         TasksListView.SetNeedsDisplay();
                     }),
                 })
@@ -1037,6 +1059,7 @@ namespace ListaRzeczyTUI
             {
                 if (AddTask() == true)
                 {
+                    Tasks.SortTasks(lastsort);
                     //TasksListView.SetSource(Tasks.taskslist.Select(x => x.title + (x.isdone ? " Done" : " Not")).ToList());
                     TasksListView.SetNeedsDisplay();
                     ButtonEdit.ColorScheme = ButtonEdit.SuperView.ColorScheme;
@@ -1050,6 +1073,7 @@ namespace ListaRzeczyTUI
                 {
                     if (AddTask() == true)
                     {
+                        Tasks.SortTasks(lastsort);
                         //TasksListView.SetSource(Tasks.taskslist.Select(x => x.title + (x.isdone ? " Done" : " Not")).ToList());
                         TasksListView.SetNeedsDisplay();
                         ButtonEdit.ColorScheme = ButtonEdit.SuperView.ColorScheme;

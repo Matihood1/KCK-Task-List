@@ -10,7 +10,6 @@ namespace ListaZadanFunkcjonalnosc
     public abstract class Tasks
     {
         public static List<Task> taskslist = new List<Task>();
-        public static int lastsorting = 0;
 
         public static Dictionary<int, string> priorities = new Dictionary<int, string>()
         {
@@ -29,6 +28,20 @@ namespace ListaZadanFunkcjonalnosc
             { "Low", 3 },
             { "Very Low", 4 }
         };
+
+        public enum sorttype
+        {
+            TitleAsc = 0,
+            TitleDesc = 1,
+            CreationDateAsc = 2,
+            CreationDateDesc = 3,
+            EndDateAsc = 4,
+            EndDateDesc = 5,
+            IsDoneAsc = 6,
+            IsDoneDesc = 7,
+            PriorityAsc = 8,
+            PriorityDesc = 9
+        }
 
         public interface ITask
         {
@@ -68,7 +81,7 @@ namespace ListaZadanFunkcjonalnosc
             return TaskTitles;
         }*/
 
-        public class Task: ITask
+        public class Task : ITask
         {
             public List<SubTask> SubTasks;
 
@@ -99,7 +112,7 @@ namespace ListaZadanFunkcjonalnosc
                 this.priority = priority;
             }
 
-            public void SortByTitle(bool ascending)
+            /*public void SortByTitle(bool ascending)
             {
                 if (ascending)
                     SubTasks.Sort((a, b) => a.title.CompareTo(b.title));
@@ -129,6 +142,53 @@ namespace ListaZadanFunkcjonalnosc
                     SubTasks.Sort((a, b) => a.isdone == b.isdone ? a.title.CompareTo(b.title) : a.isdone.CompareTo(b.isdone));
                 else
                     SubTasks.Sort((a, b) => a.isdone == b.isdone ? b.title.CompareTo(a.title) : b.isdone.CompareTo(a.isdone));
+            }*/
+
+            public void SortSubTasks(int type)
+            {
+                switch (Enum.GetName(typeof(sorttype), type))
+                {
+                    case "TitleAsc":
+                        {
+                            SubTasks.Sort((a, b) => a.title.CompareTo(b.title));
+                            break;
+                        }
+                    case "TitleDesc":
+                        {
+                            SubTasks.Sort((a, b) => b.title.CompareTo(a.title));
+                            break;
+                        }
+                    case "CreationDateAsc":
+                        {
+                            SubTasks.Sort((a, b) => a.creationdate.CompareTo(b.creationdate));
+                            break;
+                        }
+                    case "CreationDateDesc":
+                        {
+                            SubTasks.Sort((a, b) => b.creationdate.CompareTo(a.creationdate));
+                            break;
+                        }
+                    case "EndDateAsc":
+                        {
+                            SubTasks.Sort((a, b) => a.enddate == b.enddate ? a.title.CompareTo(b.title) : a.enddate.CompareTo(b.enddate));
+                            break;
+                        }
+                    case "EndDateDesc":
+                        {
+                            SubTasks.Sort((a, b) => a.enddate == b.enddate ? b.title.CompareTo(a.title) : b.enddate.CompareTo(a.enddate));
+                            break;
+                        }
+                    case "IsDoneAsc":
+                        {
+                            SubTasks.Sort((a, b) => a.isdone == b.isdone ? a.title.CompareTo(b.title) : a.isdone.CompareTo(b.isdone));
+                            break;
+                        }
+                    case "IsDoneDesc":
+                        {
+                            SubTasks.Sort((a, b) => a.isdone == b.isdone ? b.title.CompareTo(a.title) : b.isdone.CompareTo(a.isdone));
+                            break;
+                        }
+                }
             }
         }
 
@@ -179,7 +239,64 @@ namespace ListaZadanFunkcjonalnosc
             priority
         }
 
-        public static void SortByTitle(bool ascending)
+        public static void SortTasks(int type)
+        {
+            switch (Enum.GetName(typeof(sorttype), type))
+            {
+                case "TitleAsc":
+                    {
+                        taskslist.Sort((a, b) => a.title.CompareTo(b.title));
+                        break;
+                    }
+                case "TitleDesc":
+                    {
+                        taskslist.Sort((a, b) => b.title.CompareTo(a.title));
+                        break;
+                    }
+                case "CreationDateAsc":
+                    {
+                        taskslist.Sort((a, b) => a.creationdate.CompareTo(b.creationdate));
+                        break;
+                    }
+                case "CreationDateDesc":
+                    {
+                        taskslist.Sort((a, b) => b.creationdate.CompareTo(a.creationdate));
+                        break;
+                    }
+                case "EndDateAsc":
+                    {
+                        taskslist.Sort((a, b) => a.enddate == b.enddate ? a.title.CompareTo(b.title) : a.enddate.CompareTo(b.enddate));
+                        break;
+                    }
+                case "EndDateDesc":
+                    {
+                        taskslist.Sort((a, b) => a.enddate == b.enddate ? b.title.CompareTo(a.title) : b.enddate.CompareTo(a.enddate));
+                        break;
+                    }
+                case "IsDoneAsc":
+                    {
+                        taskslist.Sort((a, b) => a.isdone == b.isdone ? a.title.CompareTo(b.title) : a.isdone.CompareTo(b.isdone));
+                        break;
+                    }
+                case "IsDoneDesc":
+                    {
+                        taskslist.Sort((a, b) => a.isdone == b.isdone ? b.title.CompareTo(a.title) : b.isdone.CompareTo(a.isdone));
+                        break;
+                    }
+                case "PriorityAsc":
+                    {
+                        taskslist.Sort((a, b) => a.priority == b.priority ? a.title.CompareTo(b.title) : a.priority.CompareTo(b.priority));
+                        break;
+                    }
+                case "PriorityDesc":
+                    {
+                        taskslist.Sort((a, b) => a.priority == b.priority ? b.title.CompareTo(a.title) : b.priority.CompareTo(a.priority));
+                        break;
+                    }
+            }
+        }
+
+        /*public static void SortByTitle(bool ascending)
         {
             if(ascending)
                 taskslist.Sort((a, b) => a.title.CompareTo(b.title));
@@ -202,15 +319,6 @@ namespace ListaZadanFunkcjonalnosc
             else
                 taskslist.Sort((a, b) => a.enddate == b.enddate ? b.title.CompareTo(a.title) : b.enddate.CompareTo(a.enddate));
         }
-
-        public static void SortByPriority(bool ascending)
-        {
-            if (ascending)
-                taskslist.Sort((a, b) => a.priority == b.priority ? a.title.CompareTo(b.title) : a.priority.CompareTo(b.priority));
-            else
-                taskslist.Sort((a, b) => a.priority == b.priority ? b.title.CompareTo(a.title) : b.priority.CompareTo(a.priority));
-        }
-
         public static void SortByDone(bool ascending)
         {
             if (ascending)
@@ -218,5 +326,12 @@ namespace ListaZadanFunkcjonalnosc
             else
                 taskslist.Sort((a, b) => a.isdone == b.isdone ? b.title.CompareTo(a.title) : b.isdone.CompareTo(a.isdone));
         }
+        public static void SortByPriority(bool ascending)
+        {
+            if (ascending)
+                taskslist.Sort((a, b) => a.priority == b.priority ? a.title.CompareTo(b.title) : a.priority.CompareTo(b.priority));
+            else
+                taskslist.Sort((a, b) => a.priority == b.priority ? b.title.CompareTo(a.title) : b.priority.CompareTo(a.priority));
+        }*/
     }
 }
