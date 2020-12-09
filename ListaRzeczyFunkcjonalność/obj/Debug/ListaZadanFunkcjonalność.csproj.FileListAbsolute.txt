@@ -1,0 +1,10 @@
+C:\Users\user\source\repos\Projekt KCK\ListaRzeczyFunkcjonalność\bin\Debug\ListaZadanFunkcjonalnosc.dll.config
+C:\Users\user\source\repos\Projekt KCK\ListaRzeczyFunkcjonalność\bin\Debug\ListaZadanFunkcjonalnosc.dll
+C:\Users\user\source\repos\Projekt KCK\ListaRzeczyFunkcjonalność\bin\Debug\ListaZadanFunkcjonalnosc.pdb
+C:\Users\user\source\repos\Projekt KCK\ListaRzeczyFunkcjonalność\bin\Debug\Newtonsoft.Json.dll
+C:\Users\user\source\repos\Projekt KCK\ListaRzeczyFunkcjonalność\bin\Debug\Newtonsoft.Json.xml
+C:\Users\user\source\repos\Projekt KCK\ListaRzeczyFunkcjonalność\obj\Debug\ListaZadanFunkcjonalność.csproj.CoreCompileInputs.cache
+C:\Users\user\source\repos\Projekt KCK\ListaRzeczyFunkcjonalność\obj\Debug\ListaZadanFunkcjonalność.csproj.CopyComplete
+C:\Users\user\source\repos\Projekt KCK\ListaRzeczyFunkcjonalność\obj\Debug\ListaZadanFunkcjonalnosc.dll
+C:\Users\user\source\repos\Projekt KCK\ListaRzeczyFunkcjonalność\obj\Debug\ListaZadanFunkcjonalnosc.pdb
+C:\Users\user\source\repos\Projekt KCK\ListaRzeczyFunkcjonalność\obj\Debug\ListaZadanFunkcjonalność.csprojAssemblyReference.cache

@@ -1,0 +1,7 @@
+C:\Users\user\source\repos\Projekt KCK\ListaRzeczyFunkcjonalność\obj\Debug\ListaRzeczyFunkcjonalność.csprojAssemblyReference.cache
+C:\Users\user\source\repos\Projekt KCK\ListaRzeczyFunkcjonalność\obj\Debug\ListaRzeczyFunkcjonalność.csproj.CoreCompileInputs.cache
+C:\Users\user\source\repos\Projekt KCK\ListaRzeczyFunkcjonalność\bin\Debug\ListaRzeczyFunkcjonalność.dll.config
+C:\Users\user\source\repos\Projekt KCK\ListaRzeczyFunkcjonalność\bin\Debug\ListaRzeczyFunkcjonalność.dll
+C:\Users\user\source\repos\Projekt KCK\ListaRzeczyFunkcjonalność\bin\Debug\ListaRzeczyFunkcjonalność.pdb
+C:\Users\user\source\repos\Projekt KCK\ListaRzeczyFunkcjonalność\obj\Debug\ListaRzeczyFunkcjonalność.dll
+C:\Users\user\source\repos\Projekt KCK\ListaRzeczyFunkcjonalność\obj\Debug\ListaRzeczyFunkcjonalność.pdb
