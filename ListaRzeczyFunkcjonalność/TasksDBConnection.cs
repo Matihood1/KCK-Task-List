@@ -10,6 +10,7 @@ namespace ListaZadanFunkcjonalnosc
         {
             DB = new TasksContext();
             Tasks.taskslist = DB.Tasks.ToList();
+            Tasks.SortTasks(3);
         }
 
         public void AddTask(Tasks.Task task)

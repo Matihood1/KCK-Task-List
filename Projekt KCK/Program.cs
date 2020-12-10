@@ -9,9 +9,9 @@ namespace ListaRzeczyTUI
     class Program : Window
     {
         static TasksDBConnection DB;
-        static private bool AddTask()
+        static private bool ManageTask(Tasks.Task selectedtask)
         {
-            bool IsCreate = false;
+            bool IsManaged = false;
 
             var TaskTitleLabel = new Label("Title: ")
             {
@@ -44,11 +44,22 @@ namespace ListaRzeczyTUI
                 Width = Dim.Fill() - 3
             };
 
-            var TaskEndDateField = new DateField(DateTime.Today.AddDays(1))
+            var TaskEndDateField = new DateField()
             {
                 X = Pos.Right(TaskDescriptionLabel),
-                Y = Pos.Top(TaskEndDateLabel),
-                Width = Dim.Fill() - 3
+                Y = Pos.Top(TaskEndDateLabel)
+            };
+
+            var TaskIsDoneLabel = new Label("Done: ")
+            {
+                X = Pos.Right(TaskEndDateField) + 1,
+                Y = Pos.Top(TaskEndDateLabel)
+            };
+
+            var TaskIsDoneCheckBox = new CheckBox()
+            {
+                X = Pos.Right(TaskIsDoneLabel),
+                Y = Pos.Top(TaskEndDateLabel)
             };
 
             var TaskPriorityField = new ComboBox()
@@ -69,22 +80,12 @@ namespace ListaRzeczyTUI
                 ColorScheme = Colors.ColorSchemes["TextViewColor"]
             };
 
-            var TaskDescriptionScrollBar = new ScrollBarView()
-            {
-                X = Pos.Right(TaskDescriptionField),
-                Y = Pos.Top(TaskDescriptionField),
-                Size = 1,
-                Width = 1,
-                Height = Dim.Fill() - 2,
-                IsVertical = true
-            };
-
             var ButtonOK = new Button("Ok", is_default: true);
             ButtonOK.MouseClick += delegate (MouseEventArgs args)
             {
                 if (TaskTitleField.Text.Length > 0 && TaskTitleField.Text.Length <= 50)
                 {
-                    IsCreate = true;
+                    IsManaged = true;
                     Application.RequestStop();
                 }
                 else
@@ -92,14 +93,13 @@ namespace ListaRzeczyTUI
                     TitleControlDialog();
                 }
             };
-
             ButtonOK.KeyDown += delegate (KeyEventEventArgs args)
             {
                 if (args.KeyEvent.Key == Key.Enter)
                 {
                     if (TaskTitleField.Text.Length > 0 && TaskTitleField.Text.Length <= 50)
                     {
-                        IsCreate = true;
+                        IsManaged = true;
                         Application.RequestStop();
                     }
                     else
@@ -125,151 +125,46 @@ namespace ListaRzeczyTUI
 
             var d = new Dialog("New Task", 60, 20, ButtonOK, ButtonCancel);
 
+            if (selectedtask != null)
+            {
+                d.Title = "Edit Task " + Tasks.FormatTitle(selectedtask, 43);
+                TaskTitleField.Text = selectedtask.title;
+                TaskEndDateField.Date = selectedtask.enddate;
+                TaskIsDoneCheckBox.Checked = selectedtask.isdone;
+                TaskPriorityField.Text = Tasks.priorities[selectedtask.priority];
+                TaskDescriptionField.Text = selectedtask.description/*.Replace("\r", "\n")*/; //Dopisuje "?" przed każdą nową linią; wina biblioteki
+            }
+            else
+            {
+                TaskEndDateField.Width = Dim.Fill() - 3;
+                TaskEndDateField.Date = DateTime.Today.AddDays(1);
+            }
+
             d.Add(TaskTitleLabel, TaskEndDateLabel, TaskPriorityLabel, TaskDescriptionLabel);
             d.Add(TaskTitleField, TaskEndDateField, TaskPriorityField, TaskDescriptionField);
 
-            Application.Run(d);
-
-            if (IsCreate)
+            if (selectedtask != null)
             {
-                DB.AddTask(new Tasks.Task(TaskTitleField.Text.ToString(), TaskDescriptionField.Text.ToString(), TaskEndDateField.Date,
-                    Tasks.prioritiesinv[TaskPriorityField.Text.ToString()]));
-
+                d.Add(TaskIsDoneLabel, TaskIsDoneCheckBox);
             }
 
-            return IsCreate;
-        }
-        static private bool EditTask(Tasks.Task selectedtask)
-        {
-            bool IsEdit = false;
+            Application.Run(d);
 
-            var TaskTitleLabel = new Label("Title: ")
+            if (IsManaged)
             {
-                X = 3,
-                Y = 2
-            };
-
-            var TaskEndDateLabel = new Label("End Date: ")
-            {
-                X = Pos.Left(TaskTitleLabel),
-                Y = Pos.Bottom(TaskTitleLabel) + 1
-            };
-
-            var TaskPriorityLabel = new Label("Priority: ")
-            {
-                X = Pos.Left(TaskEndDateLabel),
-                Y = Pos.Bottom(TaskEndDateLabel) + 1
-            };
-
-            var TaskDescriptionLabel = new Label("Description: ")
-            {
-                X = Pos.Left(TaskPriorityLabel),
-                Y = Pos.Bottom(TaskPriorityLabel) + 1
-            };
-
-            var TaskTitleField = new TextField()
-            {
-                X = Pos.Right(TaskDescriptionLabel),
-                Y = Pos.Top(TaskTitleLabel),
-                Width = Dim.Fill() - 3,
-                Text = selectedtask.title
-            };
-
-            var TaskEndDateField = new DateField(selectedtask.enddate)
-            {
-                X = Pos.Right(TaskDescriptionLabel),
-                Y = Pos.Top(TaskEndDateLabel)
-            };
-
-            var TaskIsDoneLabel = new Label("Done: ")
-            {
-                X = Pos.Right(TaskEndDateField) + 1,
-                Y = Pos.Top(TaskEndDateLabel)
-            };
-
-            var TaskIsDoneCheckBox = new CheckBox()
-            {
-                X = Pos.Right(TaskIsDoneLabel),
-                Y = Pos.Top(TaskEndDateLabel),
-                Checked = selectedtask.isdone
-            };
-
-            var TaskPriorityField = new ComboBox()
-            {
-                X = Pos.Right(TaskDescriptionLabel),
-                Y = Pos.Top(TaskPriorityLabel),
-                Width = Dim.Fill() - 3
-            };
-            TaskPriorityField.SetSource(Tasks.priorities.Values.ToList());
-            TaskPriorityField.Text = Tasks.priorities[selectedtask.priority];
-
-            var TaskDescriptionField = new TextView()
-            {
-                X = Pos.Right(TaskDescriptionLabel),
-                Y = Pos.Top(TaskDescriptionLabel),
-                Width = Dim.Fill() - 3,
-                Height = Dim.Fill() - 2,
-                Text = selectedtask.description/*.Replace("\r", "\n")*/, //Dopisuje "?" przed każdą nową linią; wina biblioteki
-                ColorScheme = Colors.ColorSchemes["TextViewColor"]
-            };
-
-            var ButtonOK = new Button("Ok", is_default: true);
-            ButtonOK.MouseClick += delegate (MouseEventArgs args)
-            {
-                if (TaskTitleField.Text.Length > 0 && TaskTitleField.Text.Length <= 50)
+                if (selectedtask == null)
                 {
-                    IsEdit = true;
-                    Application.RequestStop();
+                    DB.AddTask(new Tasks.Task(TaskTitleField.Text.ToString(), TaskDescriptionField.Text.ToString(), TaskEndDateField.Date,
+                        Tasks.prioritiesinv[TaskPriorityField.Text.ToString()]));
                 }
                 else
                 {
-                    TitleControlDialog();
+                    DB.EditTask(selectedtask, TaskTitleField.Text.ToString(), TaskDescriptionField.Text.ToString(),
+                        TaskIsDoneCheckBox.Checked, TaskEndDateField.Date, Tasks.prioritiesinv[TaskPriorityField.Text.ToString()]);
                 }
-            };
-            ButtonOK.KeyDown += delegate (KeyEventEventArgs args)
-            {
-                if (args.KeyEvent.Key == Key.Enter)
-                {
-                    if (TaskTitleField.Text.Length > 0 && TaskTitleField.Text.Length <= 50)
-                    {
-                        IsEdit = true;
-                        Application.RequestStop();
-                    }
-                    else
-                    {
-                        TitleControlDialog();
-                    }
-                }
-            };
-
-            var ButtonCancel = new Button("Cancel");
-            ButtonCancel.MouseClick += delegate (MouseEventArgs args)
-            {
-                Application.RequestStop();
-            };
-
-            ButtonCancel.KeyDown += delegate (KeyEventEventArgs args)
-            {
-                if (args.KeyEvent.Key == Key.Enter)
-                {
-                    Application.RequestStop();
-                }
-            };
-
-            var d = new Dialog("Edit Task " + Tasks.FormatTitle(selectedtask, 43), 60, 20, ButtonOK, ButtonCancel);
-
-            d.Add(TaskTitleLabel, TaskEndDateLabel, TaskPriorityLabel, TaskDescriptionLabel);
-            d.Add(TaskTitleField, TaskEndDateField, TaskPriorityField, TaskDescriptionField, TaskIsDoneLabel, TaskIsDoneCheckBox);
-
-            Application.Run(d);
-
-            if (IsEdit)
-            {
-                DB.EditTask(selectedtask, TaskTitleField.Text.ToString(), TaskDescriptionField.Text.ToString(),
-                    TaskIsDoneCheckBox.Checked, TaskEndDateField.Date, Tasks.prioritiesinv[TaskPriorityField.Text.ToString()]);
             }
 
-            return (IsEdit);
+            return (IsManaged);
         }
         static private bool DeleteTask(int taskindex)
         {
@@ -323,9 +218,9 @@ namespace ListaRzeczyTUI
 
             return (IsDelete);
         }
-        static private bool AddSubTask(Tasks.Task selectedtask)
+        static private bool ManageSubTask(Tasks.Task parenttask, Tasks.SubTask selectedsubtask)
         {
-            bool IsCreate = false;
+            bool IsManaged = false;
 
             var TaskTitleLabel = new Label("Title: ")
             {
@@ -350,117 +245,12 @@ namespace ListaRzeczyTUI
                 X = Pos.Right(TaskDescriptionLabel),
                 Y = Pos.Top(TaskTitleLabel),
                 Width = Dim.Fill() - 3
-            };
-
-            var TaskEndDateField = new DateField(DateTime.Today.AddDays(1))
-            {
-                X = Pos.Right(TaskDescriptionLabel),
-                Y = Pos.Top(TaskEndDateLabel),
-                Width = Dim.Fill() - 3
-            };
-
-            var TaskDescriptionField = new TextView()
-            {
-                X = Pos.Right(TaskDescriptionLabel),
-                Y = Pos.Top(TaskDescriptionLabel),
-                Width = Dim.Fill() - 3,
-                Height = Dim.Fill() - 2,
-                ColorScheme = Colors.ColorSchemes["TextViewColor"]
-            };
-
-            var ButtonOK = new Button("Ok", is_default: true);
-            ButtonOK.MouseClick += delegate (MouseEventArgs args)
-            {
-                if (TaskTitleField.Text.Length > 0 && TaskTitleField.Text.Length <= 50)
-                {
-                    IsCreate = true;
-                    Application.RequestStop();
-                }
-                else
-                {
-                    TitleControlDialog();
-                }
-            };
-
-            ButtonOK.KeyDown += delegate (KeyEventEventArgs args)
-            {
-                if (args.KeyEvent.Key == Key.Enter)
-                {
-                    if (TaskTitleField.Text.Length > 0 && TaskTitleField.Text.Length <= 50)
-                    {
-                        IsCreate = true;
-                        Application.RequestStop();
-                    }
-                    else
-                    {
-                        TitleControlDialog();
-                    }
-                }
-            };
-
-            var ButtonCancel = new Button("Cancel");
-            ButtonCancel.MouseClick += delegate (MouseEventArgs args)
-            {
-                Application.RequestStop();
-            };
-
-            ButtonCancel.KeyDown += delegate (KeyEventEventArgs args)
-            {
-                if (args.KeyEvent.Key == Key.Enter)
-                {
-                    Application.RequestStop();
-                }
-            };
-
-            var d = new Dialog("New Subtask", 60, 20, ButtonOK, ButtonCancel);
-
-            d.Add(TaskTitleLabel, TaskEndDateLabel, TaskDescriptionLabel);
-            d.Add(TaskTitleField, TaskEndDateField, TaskDescriptionField);
-
-            Application.Run(d);
-
-            if (IsCreate)
-            {
-                DB.AddSubTask(selectedtask, new Tasks.SubTask(TaskTitleField.Text.ToString(), TaskDescriptionField.Text.ToString(), TaskEndDateField.Date));
-            }
-
-            return IsCreate;
-        }
-        static private bool EditSubTask(Tasks.Task parenttask, Tasks.SubTask selectedtask)
-        {
-            bool IsEdit = false;
-
-            var TaskTitleLabel = new Label("Title: ")
-            {
-                X = 3,
-                Y = 2
-            };
-
-            var TaskEndDateLabel = new Label("End Date: ")
-            {
-                X = Pos.Left(TaskTitleLabel),
-                Y = Pos.Bottom(TaskTitleLabel) + 1
-            };
-
-            var TaskDescriptionLabel = new Label("Description: ")
-            {
-                X = Pos.Left(TaskEndDateLabel),
-                Y = Pos.Bottom(TaskEndDateLabel) + 1
-            };
-
-            var TaskTitleField = new TextField()
-            {
-                X = Pos.Right(TaskDescriptionLabel),
-                Y = Pos.Top(TaskTitleLabel),
-                Width = Dim.Fill() - 3,
-                Text = selectedtask.title
             };
 
             var TaskEndDateField = new DateField()
             {
                 X = Pos.Right(TaskDescriptionLabel),
-                Y = Pos.Top(TaskEndDateLabel),
-                Date = selectedtask.enddate
+                Y = Pos.Top(TaskEndDateLabel)
             };
 
             var TaskIsDoneLabel = new Label("Done: ")
@@ -472,8 +262,7 @@ namespace ListaRzeczyTUI
             var TaskIsDoneCheckBox = new CheckBox()
             {
                 X = Pos.Right(TaskIsDoneLabel),
-                Y = Pos.Top(TaskEndDateLabel),
-                Checked = selectedtask.isdone
+                Y = Pos.Top(TaskEndDateLabel)
             };
 
             var TaskDescriptionField = new TextView()
@@ -482,7 +271,6 @@ namespace ListaRzeczyTUI
                 Y = Pos.Top(TaskDescriptionLabel),
                 Width = Dim.Fill() - 3,
                 Height = Dim.Fill() - 2,
-                Text = selectedtask.description/*.Replace("\r", "\n")*/,
                 ColorScheme = Colors.ColorSchemes["TextViewColor"]
             };
 
@@ -491,7 +279,7 @@ namespace ListaRzeczyTUI
             {
                 if (TaskTitleField.Text.Length > 0 && TaskTitleField.Text.Length <= 50)
                 {
-                    IsEdit = true;
+                    IsManaged = true;
                     Application.RequestStop();
                 }
                 else
@@ -506,7 +294,7 @@ namespace ListaRzeczyTUI
                 {
                     if (TaskTitleField.Text.Length > 0 && TaskTitleField.Text.Length <= 50)
                     {
-                        IsEdit = true;
+                        IsManaged = true;
                         Application.RequestStop();
                     }
                     else
@@ -530,19 +318,45 @@ namespace ListaRzeczyTUI
                 }
             };
 
-            var d = new Dialog("Edit Subtask " + Tasks.FormatTitle(selectedtask, 43), 60, 20, ButtonOK, ButtonCancel);
+            var d = new Dialog("New Subtask ", 60, 20, ButtonOK, ButtonCancel);
+
+            if (selectedsubtask != null)
+            {
+                d.Title = "Edit Subtask " + Tasks.FormatTitle(selectedsubtask, 43);
+                TaskTitleField.Text = selectedsubtask.title;
+                TaskEndDateField.Date = selectedsubtask.enddate;
+                TaskIsDoneCheckBox.Checked = selectedsubtask.isdone;
+                TaskDescriptionField.Text = selectedsubtask.description/*.Replace("\r", "\n")*/; //Dopisuje "?" przed każdą nową linią; wina biblioteki
+            }
+            else
+            {
+                TaskEndDateField.Width = Dim.Fill() - 3;
+                TaskEndDateField.Date = DateTime.Today.AddDays(1);
+            }
 
             d.Add(TaskTitleLabel, TaskEndDateLabel, TaskDescriptionLabel);
-            d.Add(TaskTitleField, TaskEndDateField, TaskDescriptionField, TaskIsDoneLabel, TaskIsDoneCheckBox);
+            d.Add(TaskTitleField, TaskEndDateField, TaskDescriptionField);
+
+            if (selectedsubtask != null)
+            {
+                d.Add(TaskIsDoneLabel, TaskIsDoneCheckBox);
+            }
 
             Application.Run(d);
 
-            if (IsEdit)
+            if (IsManaged)
             {
-                DB.EditSubTask(parenttask, selectedtask, TaskTitleField.Text.ToString(), TaskDescriptionField.Text.ToString(), TaskIsDoneCheckBox.Checked, TaskEndDateField.Date);
+                if (selectedsubtask == null)
+                {
+                    DB.AddSubTask(parenttask, new Tasks.SubTask(TaskTitleField.Text.ToString(), TaskDescriptionField.Text.ToString(), TaskEndDateField.Date));
+                }
+                else
+                {
+                    DB.EditSubTask(parenttask, selectedsubtask, TaskTitleField.Text.ToString(), TaskDescriptionField.Text.ToString(), TaskIsDoneCheckBox.Checked, TaskEndDateField.Date);
+                }
             }
 
-            return IsEdit;
+            return IsManaged;
         }
         static private bool DeleteSubTask(Tasks.Task selectedtask, int taskindex)
         {
@@ -596,9 +410,41 @@ namespace ListaRzeczyTUI
 
             return (IsDelete);
         }
+
+        private static void TitleControlDialog()
+        {
+            var ButtonOK = new Button("Ok", is_default: true);
+
+            ButtonOK.MouseClick += delegate (MouseEventArgs args)
+            {
+                Application.RequestStop();
+            };
+
+            ButtonOK.KeyDown += delegate (KeyEventEventArgs args)
+            {
+                if (args.KeyEvent.Key == Key.Enter)
+                {
+                    Application.RequestStop();
+                }
+            };
+
+            var d = new Dialog("Error!", 50, 10, ButtonOK);
+
+            var ErrorLabel = new Label("The Title must be between 1 and 50 characters!")
+            {
+                X = Pos.Center(),
+                Y = Pos.Center()
+            };
+
+            d.Add(ErrorLabel);
+
+            Application.Run(d);
+        }
+
         static private void TaskDetails(Tasks.Task selectedtask)
         {
             int lastsort = 3;
+            selectedtask.SortSubTasks(lastsort);
             var NewTop = new Toplevel(Application.Top.Frame);
 
             Window win = new Window("Details:")
@@ -688,12 +534,6 @@ namespace ListaRzeczyTUI
                     new MenuItem ("_Close", "", () => { NewTop.Running = false; }),
                     new MenuItem ("_Quit", "", () => { Application.Shutdown(); })
                 }),
-                new MenuBarItem ("_Edit", new MenuItem []
-                {
-                    new MenuItem ("_Copy", "", null),
-                    new MenuItem ("C_ut", "", null),
-                    new MenuItem ("_Paste", "", null)
-                }),
                 new MenuBarItem ("_Order", new MenuItem []
                 {
                     new MenuItem ("Title asc.", "", () =>
@@ -776,7 +616,7 @@ namespace ListaRzeczyTUI
 
             ButtonAdd.MouseClick += delegate (MouseEventArgs args)
             {
-                if (AddSubTask(selectedtask) == true)
+                if (ManageSubTask(selectedtask, null) == true)
                 {
                     selectedtask.SortSubTasks(lastsort);
                     SubTasksListView.SetNeedsDisplay();
@@ -789,7 +629,7 @@ namespace ListaRzeczyTUI
             {
                 if (args.KeyEvent.Key == Key.Enter)
                 {
-                    if (AddSubTask(selectedtask) == true)
+                    if (ManageSubTask(selectedtask, null) == true)
                     {
                         selectedtask.SortSubTasks(lastsort);
                         SubTasksListView.SetNeedsDisplay();
@@ -803,7 +643,7 @@ namespace ListaRzeczyTUI
             {
                 if (selectedtask.SubTasks.Count > 0)
                 {
-                    if (EditSubTask(selectedtask, selectedtask.SubTasks[SubTasksListView.SelectedItem]) == true)
+                    if (ManageSubTask(selectedtask, selectedtask.SubTasks[SubTasksListView.SelectedItem]) == true)
                     {
                         SubTasksListView.SetNeedsDisplay();
                     }
@@ -814,7 +654,7 @@ namespace ListaRzeczyTUI
             {
                 if (selectedtask.SubTasks.Count > 0 && args.KeyEvent.Key == Key.Enter)
                 {
-                    if (EditSubTask(selectedtask, selectedtask.SubTasks[SubTasksListView.SelectedItem]) == true)
+                    if (ManageSubTask(selectedtask, selectedtask.SubTasks[SubTasksListView.SelectedItem]) == true)
                     {
                         SubTasksListView.SetNeedsDisplay();
                     }
@@ -876,37 +716,6 @@ namespace ListaRzeczyTUI
             NewTop.Add(win);
             Application.Run(NewTop);
         }
-
-        private static void TitleControlDialog()
-        {
-            var ButtonOK = new Button("Ok", is_default: true);
-
-            ButtonOK.MouseClick += delegate (MouseEventArgs args)
-            {
-                Application.RequestStop();
-            };
-
-            ButtonOK.KeyDown += delegate (KeyEventEventArgs args)
-            {
-                if (args.KeyEvent.Key == Key.Enter)
-                {
-                    Application.RequestStop();
-                }
-            };
-
-            var d = new Dialog("Error!", 50, 10, ButtonOK);
-
-            var ErrorLabel = new Label("The Title must be between 1 and 50 characters!")
-            {
-                X = Pos.Center(),
-                Y = Pos.Center()
-            };
-
-            d.Add(ErrorLabel);
-
-            Application.Run(d);
-        }
-
         private static void SubTaskDetails(Tasks.SubTask subtask)
         {
             var ButtonOK = new Button("Ok", is_default: true);
@@ -993,12 +802,6 @@ namespace ListaRzeczyTUI
                 new MenuBarItem ("_File", new MenuItem []
                 {
                     new MenuItem ("_Quit", "", () => { Application.Shutdown(); })
-                }),
-                new MenuBarItem ("_Edit", new MenuItem []
-                {
-                    new MenuItem ("_Copy", "", null),
-                    new MenuItem ("C_ut", "", null),
-                    new MenuItem ("_Paste", "", null)
                 }),
                 new MenuBarItem ("_Order", new MenuItem []
                 {
@@ -1094,7 +897,7 @@ namespace ListaRzeczyTUI
 
             ButtonAdd.MouseClick += delegate (MouseEventArgs args)
             {
-                if (AddTask() == true)
+                if (ManageTask(null) == true)
                 {
                     Tasks.SortTasks(lastsort);
                     TasksListView.SetNeedsDisplay();
@@ -1107,7 +910,7 @@ namespace ListaRzeczyTUI
             {
                 if (args.KeyEvent.Key == Key.Enter)
                 {
-                    if (AddTask() == true)
+                    if (ManageTask(null) == true)
                     {
                         Tasks.SortTasks(lastsort);
                         TasksListView.SetNeedsDisplay();
@@ -1121,7 +924,7 @@ namespace ListaRzeczyTUI
             {
                 if (Tasks.taskslist.Count > 0)
                 {
-                    if (EditTask(Tasks.taskslist[TasksListView.SelectedItem]) == true)
+                    if (ManageTask(Tasks.taskslist[TasksListView.SelectedItem]) == true)
                     {
                         TasksListView.SetNeedsDisplay();
                     }
@@ -1132,7 +935,7 @@ namespace ListaRzeczyTUI
             {
                 if (Tasks.taskslist.Count > 0 && args.KeyEvent.Key == Key.Enter)
                 {
-                    if (EditTask(Tasks.taskslist[TasksListView.SelectedItem]) == true)
+                    if (ManageTask(Tasks.taskslist[TasksListView.SelectedItem]) == true)
                     {
                         TasksListView.SetNeedsDisplay();
                     }
@@ -1212,13 +1015,6 @@ namespace ListaRzeczyTUI
         {
             CultureInfo.CurrentCulture = new CultureInfo("pl-PL");
             DB = new TasksDBConnection();
-            //TasksContext DB = new TasksContext();
-            //DB.Tasks.Add(new Tasks.Task("sadasdasda", "adsadas", DateTime.Now, 0));
-            //DB.Tasks.Remove(DB.Tasks.Find(2));
-            //DB.Tasks.Remove(DB.Tasks.Find(3));
-            //DB.SaveChanges();
-            //var thing = DB.Tasks.ToList();
-            //var thing = DB.Tasks.Find(0);
 
             TasksWindow();
         }
