@@ -14,3 +14,9 @@ C:\Users\user\source\repos\Projekt KCK\Projekt KCK\obj\Debug\ListaZadanTUI.cspro
 C:\Users\user\source\repos\Projekt KCK\Projekt KCK\obj\Debug\ListaZadanTUI.csproj.CopyComplete
 C:\Users\user\source\repos\Projekt KCK\Projekt KCK\obj\Debug\Projekt KCK.exe
 C:\Users\user\source\repos\Projekt KCK\Projekt KCK\obj\Debug\Projekt KCK.pdb
+C:\Users\user\source\repos\Projekt KCK\Projekt KCK\bin\Debug\System.ValueTuple.dll
+C:\Users\user\source\repos\Projekt KCK\Projekt KCK\bin\Debug\System.ValueTuple.xml
+C:\Users\user\source\repos\Projekt KCK\Projekt KCK\bin\Debug\EntityFramework.dll
+C:\Users\user\source\repos\Projekt KCK\Projekt KCK\bin\Debug\EntityFramework.xml
+C:\Users\user\source\repos\Projekt KCK\Projekt KCK\bin\Debug\EntityFramework.SqlServer.dll
+C:\Users\user\source\repos\Projekt KCK\Projekt KCK\bin\Debug\EntityFramework.SqlServer.xml

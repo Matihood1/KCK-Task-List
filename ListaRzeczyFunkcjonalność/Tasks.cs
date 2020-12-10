@@ -9,7 +9,7 @@ namespace ListaZadanFunkcjonalnosc
 {
     public abstract class Tasks
     {
-        public static List<Task> taskslist = new List<Task>();
+        public static List<Task> taskslist;
 
         public static Dictionary<int, string> priorities = new Dictionary<int, string>()
         {
@@ -52,45 +52,22 @@ namespace ListaZadanFunkcjonalnosc
             DateTime creationdate { get; }
         }
 
-        /*public enum priorities
-        {
-            [Description("Very High")] VeryHigh,
-            [Description("High")] High,
-            [Description("Medium")] Medium,
-            [Description("Low")] Low,
-            [Description("Very Low")] VeryLow
-        }*/
-
-        /*public static List<string> GetTaskTitlesList(List<Task> lista)
-        {
-            List<string> TaskTitles = new List<string>();
-            foreach (var task in lista)
-            {
-                TaskTitles.Add(task.Title);
-            }
-            return TaskTitles;
-        }
-
-        public static List<string> GetSubTaskTitlesList(List<SubTask> lista)
-        {
-            List<string> TaskTitles = new List<string>();
-            foreach (var task in lista)
-            {
-                TaskTitles.Add(task.Title);
-            }
-            return TaskTitles;
-        }*/
-
         public class Task : ITask
         {
             public List<SubTask> SubTasks;
 
-            public string title { get; private set; }
-            public string description { get; private set; }
-            public bool isdone { get; private set; }
-            public DateTime enddate { get; private set; }
-            public DateTime creationdate { get; private set; }
-            public int priority { get; private set; }
+            public int id { get; set; }
+            public string title { get; set; }
+            public string description { get; set; }
+            public bool isdone { get; set; }
+            public DateTime enddate { get; set; }
+            public DateTime creationdate { get; set; }
+            public int priority { get; set; }
+
+            public Task()
+            {
+
+            }
 
             public Task(string title, string description, DateTime enddate, int priority)
             {
@@ -111,38 +88,6 @@ namespace ListaZadanFunkcjonalnosc
                 this.enddate = enddate;
                 this.priority = priority;
             }
-
-            /*public void SortByTitle(bool ascending)
-            {
-                if (ascending)
-                    SubTasks.Sort((a, b) => a.title.CompareTo(b.title));
-                else
-                    SubTasks.Sort((a, b) => b.title.CompareTo(a.title));
-            }
-
-            public void SortByCreationDate(bool ascending)
-            {
-                if (ascending)
-                    SubTasks.Sort((a, b) => a.creationdate.CompareTo(b.creationdate));
-                else
-                    SubTasks.Sort((a, b) => b.creationdate.CompareTo(a.creationdate));
-            }
-
-            public void SortByEndDate(bool ascending)
-            {
-                if (ascending)
-                    SubTasks.Sort((a, b) => a.enddate == b.enddate ? a.title.CompareTo(b.title) : a.enddate.CompareTo(b.enddate));
-                else
-                    SubTasks.Sort((a, b) => a.enddate == b.enddate ? b.title.CompareTo(a.title) : b.enddate.CompareTo(a.enddate));
-            }
-
-            public void SortByDone(bool ascending)
-            {
-                if (ascending)
-                    SubTasks.Sort((a, b) => a.isdone == b.isdone ? a.title.CompareTo(b.title) : a.isdone.CompareTo(b.isdone));
-                else
-                    SubTasks.Sort((a, b) => a.isdone == b.isdone ? b.title.CompareTo(a.title) : b.isdone.CompareTo(a.isdone));
-            }*/
 
             public void SortSubTasks(int type)
             {
@@ -194,11 +139,18 @@ namespace ListaZadanFunkcjonalnosc
 
         public class SubTask: ITask
         {
-            public string title { get; private set; }
-            public string description { get; private set; }
-            public bool isdone { get; private set; }
-            public DateTime enddate { get; private set; }
-            public DateTime creationdate { get; private set; }
+            public int id { get; set; }
+            public string title { get; set; }
+            public string description { get; set; }
+            public bool isdone { get; set; }
+            public DateTime enddate { get; set; }
+            public DateTime creationdate { get; set; }
+
+            public SubTask()
+            {
+
+            }
+
             public SubTask(string title, string description, DateTime enddate)
             {
                 this.title = title;

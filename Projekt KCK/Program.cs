@@ -11,6 +11,7 @@ namespace ListaRzeczyTUI
 {
     class Program : Window
     {
+        static TasksDBConnection DB;
         static private bool AddTask()
         {
             bool IsCreate = false;
@@ -68,7 +69,7 @@ namespace ListaRzeczyTUI
                 Y = Pos.Top(TaskDescriptionLabel),
                 Width = Dim.Fill() - 3,
                 Height = Dim.Fill() - 2,
-                ColorScheme = Colors.ColorSchemes["Test"]
+                ColorScheme = Colors.ColorSchemes["TextViewColor"]
             };
 
             var TaskDescriptionScrollBar = new ScrollBarView()
@@ -84,14 +85,14 @@ namespace ListaRzeczyTUI
             var ButtonOK = new Button("Ok", is_default: true);
             ButtonOK.MouseClick += delegate (MouseEventArgs args)
             {
-                if (TaskTitleField.Text.Length != 0)
+                if (TaskTitleField.Text.Length > 0 && TaskTitleField.Text.Length <= 50)
                 {
                     IsCreate = true;
                     Application.RequestStop();
                 }
                 else
                 {
-                    TitleEmptyDialog();
+                    TitleControlDialog();
                 }
             };
 
@@ -99,14 +100,14 @@ namespace ListaRzeczyTUI
             {
                 if (args.KeyEvent.Key == Key.Enter)
                 {
-                    if (TaskTitleField.Text.Length != 0)
+                    if (TaskTitleField.Text.Length > 0 && TaskTitleField.Text.Length <= 50)
                     {
                         IsCreate = true;
                         Application.RequestStop();
                     }
                     else
                     {
-                        TitleEmptyDialog();
+                        TitleControlDialog();
                     }
                 }
             };
@@ -134,8 +135,10 @@ namespace ListaRzeczyTUI
 
             if (IsCreate)
             {
-                Tasks.taskslist.Add(new Tasks.Task(TaskTitleField.Text.ToString(), TaskDescriptionField.Text.ToString(), TaskEndDateField.Date,
+                //Tasks.taskslist.Add(tmp);
+                DB.AddTask(new Tasks.Task(TaskTitleField.Text.ToString(), TaskDescriptionField.Text.ToString(), TaskEndDateField.Date,
                     Tasks.prioritiesinv[TaskPriorityField.Text.ToString()]));
+
             }
 
             return IsCreate;
@@ -210,35 +213,35 @@ namespace ListaRzeczyTUI
                 Y = Pos.Top(TaskDescriptionLabel),
                 Width = Dim.Fill() - 3,
                 Height = Dim.Fill() - 2,
-                Text = selectedtask.description,
-                ColorScheme = Colors.ColorSchemes["Test"]
+                Text = selectedtask.description/*.Replace("\r", "\n")*/, //Dopisuje "?" przed każdą nową linią; wina biblioteki
+                ColorScheme = Colors.ColorSchemes["TextViewColor"]
             };
 
             var ButtonOK = new Button("Ok", is_default: true);
             ButtonOK.MouseClick += delegate (MouseEventArgs args)
             {
-                if (TaskTitleField.Text.Length != 0)
+                if (TaskTitleField.Text.Length > 0 && TaskTitleField.Text.Length <= 50)
                 {
                     IsEdit = true;
                     Application.RequestStop();
                 }
                 else
                 {
-                    TitleEmptyDialog();
+                    TitleControlDialog();
                 }
             };
             ButtonOK.KeyDown += delegate (KeyEventEventArgs args)
             {
                 if (args.KeyEvent.Key == Key.Enter)
                 {
-                    if (TaskTitleField.Text.Length != 0)
+                    if (TaskTitleField.Text.Length > 0 && TaskTitleField.Text.Length <= 50)
                     {
                         IsEdit = true;
                         Application.RequestStop();
                     }
                     else
                     {
-                        TitleEmptyDialog();
+                        TitleControlDialog();
                     }
                 }
             };
@@ -266,7 +269,9 @@ namespace ListaRzeczyTUI
 
             if (IsEdit)
             {
-                selectedtask.Update(TaskTitleField.Text.ToString(), TaskDescriptionField.Text.ToString(),
+                /*selectedtask.Update(TaskTitleField.Text.ToString(), TaskDescriptionField.Text.ToString(),
+                    TaskIsDoneCheckBox.Checked, TaskEndDateField.Date, Tasks.prioritiesinv[TaskPriorityField.Text.ToString()]);*/
+                DB.EditTask(selectedtask, TaskTitleField.Text.ToString(), TaskDescriptionField.Text.ToString(),
                     TaskIsDoneCheckBox.Checked, TaskEndDateField.Date, Tasks.prioritiesinv[TaskPriorityField.Text.ToString()]);
             }
 
@@ -305,7 +310,7 @@ namespace ListaRzeczyTUI
                 }
             };
 
-            var d = new Dialog("Delete Task " + Tasks.taskslist[taskindex].title, 60, 20, ButtonYes, ButtonNo);
+            var d = new Dialog("Delete Task " + Tasks.taskslist[taskindex].title, 60, 10, ButtonYes, ButtonNo);
 
             var ConfirmationLabel = new Label("Are you sure you want to delete this task?")
             {
@@ -319,7 +324,8 @@ namespace ListaRzeczyTUI
 
             if (IsDelete)
             {
-                Tasks.taskslist.RemoveAt(taskindex);
+                //Tasks.taskslist.RemoveAt(taskindex);
+                DB.DeleteTask(taskindex);
             }
 
             return (IsDelete);
@@ -366,20 +372,20 @@ namespace ListaRzeczyTUI
                 Y = Pos.Top(TaskDescriptionLabel),
                 Width = Dim.Fill() - 3,
                 Height = Dim.Fill() - 2,
-                ColorScheme = Colors.ColorSchemes["Test"]
+                ColorScheme = Colors.ColorSchemes["TextViewColor"]
             };
 
             var ButtonOK = new Button("Ok", is_default: true);
             ButtonOK.MouseClick += delegate (MouseEventArgs args)
             {
-                if (TaskTitleField.Text.Length != 0)
+                if (TaskTitleField.Text.Length > 0 && TaskTitleField.Text.Length <= 50)
                 {
                     IsCreate = true;
                     Application.RequestStop();
                 }
                 else
                 {
-                    TitleEmptyDialog();
+                    TitleControlDialog();
                 }
             };
 
@@ -387,14 +393,14 @@ namespace ListaRzeczyTUI
             {
                 if (args.KeyEvent.Key == Key.Enter)
                 {
-                    if (TaskTitleField.Text.Length != 0)
+                    if (TaskTitleField.Text.Length > 0 && TaskTitleField.Text.Length <= 50)
                     {
                         IsCreate = true;
                         Application.RequestStop();
                     }
                     else
                     {
-                        TitleEmptyDialog();
+                        TitleControlDialog();
                     }
                 }
             };
@@ -422,12 +428,13 @@ namespace ListaRzeczyTUI
 
             if (IsCreate)
             {
-                selectedtask.SubTasks.Add(new Tasks.SubTask(TaskTitleField.Text.ToString(), TaskDescriptionField.Text.ToString(), TaskEndDateField.Date));
+                //selectedtask.SubTasks.Add(new Tasks.SubTask(TaskTitleField.Text.ToString(), TaskDescriptionField.Text.ToString(), TaskEndDateField.Date));
+                DB.AddSubTask(selectedtask, new Tasks.SubTask(TaskTitleField.Text.ToString(), TaskDescriptionField.Text.ToString(), TaskEndDateField.Date));
             }
 
             return IsCreate;
         }
-        static private bool EditSubTask(Tasks.SubTask selectedtask)
+        static private bool EditSubTask(Tasks.Task parenttask, Tasks.SubTask selectedtask)
         {
             bool IsEdit = false;
 
@@ -483,21 +490,21 @@ namespace ListaRzeczyTUI
                 Y = Pos.Top(TaskDescriptionLabel),
                 Width = Dim.Fill() - 3,
                 Height = Dim.Fill() - 2,
-                Text = selectedtask.description,
-                ColorScheme = Colors.ColorSchemes["Test"]
+                Text = selectedtask.description/*.Replace("\r", "\n")*/,
+                ColorScheme = Colors.ColorSchemes["TextViewColor"]
             };
 
             var ButtonOK = new Button("Ok", is_default: true);
             ButtonOK.MouseClick += delegate (MouseEventArgs args)
             {
-                if (TaskTitleField.Text.Length != 0)
+                if (TaskTitleField.Text.Length > 0 && TaskTitleField.Text.Length <= 50)
                 {
                     IsEdit = true;
                     Application.RequestStop();
                 }
                 else
                 {
-                    TitleEmptyDialog();
+                    TitleControlDialog();
                 }
             };
 
@@ -505,14 +512,14 @@ namespace ListaRzeczyTUI
             {
                 if (args.KeyEvent.Key == Key.Enter)
                 {
-                    if (TaskTitleField.Text.Length != 0)
+                    if (TaskTitleField.Text.Length > 0 && TaskTitleField.Text.Length <= 50)
                     {
                         IsEdit = true;
                         Application.RequestStop();
                     }
                     else
                     {
-                        TitleEmptyDialog();
+                        TitleControlDialog();
                     }
                 }
             };
@@ -540,7 +547,8 @@ namespace ListaRzeczyTUI
 
             if (IsEdit)
             {
-                selectedtask.Update(TaskTitleField.Text.ToString(), TaskDescriptionField.Text.ToString(), TaskIsDoneCheckBox.Checked, TaskEndDateField.Date);
+                //selectedtask.Update(TaskTitleField.Text.ToString(), TaskDescriptionField.Text.ToString(), TaskIsDoneCheckBox.Checked, TaskEndDateField.Date);
+                DB.EditSubTask(parenttask, selectedtask, TaskTitleField.Text.ToString(), TaskDescriptionField.Text.ToString(), TaskIsDoneCheckBox.Checked, TaskEndDateField.Date);
             }
 
             return IsEdit;
@@ -578,7 +586,7 @@ namespace ListaRzeczyTUI
                 }
             };
 
-            var d = new Dialog("Delete Subtask " + Tasks.taskslist[taskindex].title, 60, 20, ButtonYes, ButtonNo);
+            var d = new Dialog("Delete Subtask " + Tasks.taskslist[taskindex].title, 60, 10, ButtonYes, ButtonNo);
 
             var ConfirmationLabel = new Label("Are you sure you want to delete this subtask?")
             {
@@ -592,7 +600,8 @@ namespace ListaRzeczyTUI
 
             if (IsDelete)
             {
-                selectedtask.SubTasks.RemoveAt(taskindex);
+                //selectedtask.SubTasks.RemoveAt(taskindex);
+                DB.DeleteSubTask(selectedtask, taskindex);
             }
 
             return (IsDelete);
@@ -602,7 +611,7 @@ namespace ListaRzeczyTUI
             int lastsort = 3;
             var NewTop = new Toplevel(Application.Top.Frame);
 
-            Window win = new Window("Details: " + Tasks.FormatTitle(selectedtask, 43))
+            Window win = new Window("Details:")
             {
                 X = 0,
                 Y = 1,
@@ -610,7 +619,7 @@ namespace ListaRzeczyTUI
                 Height = Dim.Fill()
             };
 
-            FrameView TaskDetailsFrameView = new FrameView()
+            var TaskDetailsFrameView = new FrameView()
             {
                 X = 0,
                 Y = Pos.Percent(50),
@@ -618,10 +627,21 @@ namespace ListaRzeczyTUI
                 Height = Dim.Percent(50)
             };
 
+            var TaskDetailsLabel = new Label(string.Format("Title: {0}\nCreation Date: {1}\nEnd Date: {2}\nPriority {3}\nDone: {4}\nDescription: {5}",
+            Tasks.FormatTitle(selectedtask, 50), selectedtask.creationdate, selectedtask.enddate.ToString("dd.MM.yyyy"), Tasks.priorities[selectedtask.priority], 
+            selectedtask.isdone ? "Yes" : "No", selectedtask.description))
+            {
+                X = 1,
+                Y = 0,
+                Width = Dim.Percent(75),
+                Height = Dim.Percent(50) - 1
+            };
+
+            win.Add(TaskDetailsLabel);
+
             FrameView SubTasksListFrameView = new FrameView("Subtasks")
             {
                 X = 0,
-                //Y = 0,
                 Y = Pos.Percent(50),
                 Width = Dim.Percent(75),
                 Height = Dim.Fill()
@@ -633,8 +653,7 @@ namespace ListaRzeczyTUI
                 Y = 0
             };
 
-            //ListView SubTasksListView = new ListView(selectedtask.SubTasks.Select(x => x.title + (x.isdone ? " Done" : " Not")).ToList())
-            ListView SubTasksListView = new ListView(new TasksListDisplay(selectedtask.SubTasks))
+            var SubTasksListView = new ListView(new TasksListDisplay(selectedtask.SubTasks))
             {
                 X = 0,
                 Y = 1,
@@ -664,15 +683,20 @@ namespace ListaRzeczyTUI
             SubTasksListFrameView.Add(SubTasksListView, SubTasksListLabel);
             win.Add(SubTasksListFrameView, ButtonExit);
 
-            // Creates a menubar, the item "New" has a help menu.
+            SubTasksListView.OpenSelectedItem += delegate (ListViewItemEventArgs args)
+            {
+                if (selectedtask.SubTasks.Count > 0)
+                {
+                    SubTaskDetails(selectedtask.SubTasks[SubTasksListView.SelectedItem]);
+                }
+            };
+
             var menu = new MenuBar(new MenuBarItem[]
             {
                 new MenuBarItem ("_File", new MenuItem []
                 {
-                    //new MenuItem ("_New", "Creates new file", NewFile),
-                    //new MenuItem ("_Close", "", () => Close ()),
-                    //new MenuItem ("_Quit", "", () => { if (Quit ()) top.Running = false; })
-                    new MenuItem ("_Close", "", () => { NewTop.Running = false; })
+                    new MenuItem ("_Close", "", () => { NewTop.Running = false; }),
+                    new MenuItem ("_Quit", "", () => { Application.Shutdown(); })
                 }),
                 new MenuBarItem ("_Edit", new MenuItem []
                 {
@@ -744,24 +768,18 @@ namespace ListaRzeczyTUI
 
             var ButtonAdd = new Button("Add Subtask")
             {
-                //X = 2,
-                //Y = Pos.Bottom(TaskListView)
                 X = 0,
                 Y = 1
             };
 
             var ButtonEdit = new Button("Edit Subtask")
             {
-                //X = Pos.Right(ButtonAdd) + 1,
-                //Y = Pos.Bottom(TaskListView),
                 X = 0,
                 Y = Pos.Bottom(ButtonAdd) + 1
             };
 
             var ButtonDelete = new Button("Delete Subtask")
             {
-                //X = Pos.Right(ButtonEdit) + 1,
-                //Y = Pos.Bottom(TaskListView)
                 X = 0,
                 Y = Pos.Bottom(ButtonEdit) + 1,
             };
@@ -770,7 +788,6 @@ namespace ListaRzeczyTUI
             {
                 if (AddSubTask(selectedtask) == true)
                 {
-                    //SubTasksListView.SetSource(selectedtask.SubTasks.Select(x => x.title + (x.isdone ? " Done" : " Not")).ToList());
                     selectedtask.SortSubTasks(lastsort);
                     SubTasksListView.SetNeedsDisplay();
                     ButtonEdit.ColorScheme = ButtonEdit.SuperView.ColorScheme;
@@ -784,7 +801,6 @@ namespace ListaRzeczyTUI
                 {
                     if (AddSubTask(selectedtask) == true)
                     {
-                        //SubTasksListView.SetSource(selectedtask.SubTasks.Select(x => x.title + (x.isdone ? " Done" : " Not")).ToList());
                         selectedtask.SortSubTasks(lastsort);
                         SubTasksListView.SetNeedsDisplay();
                         ButtonEdit.ColorScheme = ButtonEdit.SuperView.ColorScheme;
@@ -797,9 +813,8 @@ namespace ListaRzeczyTUI
             {
                 if (selectedtask.SubTasks.Count > 0)
                 {
-                    if (EditSubTask(selectedtask.SubTasks[SubTasksListView.SelectedItem]) == true)
+                    if (EditSubTask(selectedtask, selectedtask.SubTasks[SubTasksListView.SelectedItem]) == true)
                     {
-                        //SubTasksListView.SetSource(selectedtask.SubTasks.Select(x => x.title + (x.isdone ? " Done" : " Not")).ToList());
                         SubTasksListView.SetNeedsDisplay();
                     }
                 }
@@ -809,9 +824,8 @@ namespace ListaRzeczyTUI
             {
                 if (selectedtask.SubTasks.Count > 0 && args.KeyEvent.Key == Key.Enter)
                 {
-                    if (EditSubTask(selectedtask.SubTasks[SubTasksListView.SelectedItem]) == true)
+                    if (EditSubTask(selectedtask, selectedtask.SubTasks[SubTasksListView.SelectedItem]) == true)
                     {
-                        //SubTasksListView.SetSource(selectedtask.SubTasks.Select(x => x.title + (x.isdone ? " Done" : " Not")).ToList());
                         SubTasksListView.SetNeedsDisplay();
                     }
                 }
@@ -823,7 +837,6 @@ namespace ListaRzeczyTUI
                 {
                     if (DeleteSubTask(selectedtask, SubTasksListView.SelectedItem) == true)
                     {
-                        //SubTasksListView.SetSource(selectedtask.SubTasks.Select(x => x.title + (x.isdone ? " Done" : " Not")).ToList());
                         if (SubTasksListView.SelectedItem > selectedtask.SubTasks.Count - 1)
                         {
                             SubTasksListView.MoveUp();
@@ -844,7 +857,6 @@ namespace ListaRzeczyTUI
                 {
                     if (DeleteSubTask(selectedtask, SubTasksListView.SelectedItem) == true)
                     {
-                        //SubTasksListView.SetSource(selectedtask.SubTasks.Select(x => x.title + (x.isdone ? " Done" : " Not")).ToList());
                         if (SubTasksListView.SelectedItem > selectedtask.SubTasks.Count - 1)
                         {
                             SubTasksListView.MoveUp();
@@ -875,7 +887,7 @@ namespace ListaRzeczyTUI
             Application.Run(NewTop);
         }
 
-        private static void TitleEmptyDialog()
+        private static void TitleControlDialog()
         {
             var ButtonOK = new Button("Ok", is_default: true);
 
@@ -892,9 +904,9 @@ namespace ListaRzeczyTUI
                 }
             };
 
-            var d = new Dialog("Error!", 38, 10, ButtonOK);
+            var d = new Dialog("Error!", 50, 10, ButtonOK);
 
-            var ErrorLabel = new Label("The Title field must not be empty!")
+            var ErrorLabel = new Label("The Title must be between 1 and 50 characters!")
             {
                 X = Pos.Center(),
                 Y = Pos.Center()
@@ -905,29 +917,57 @@ namespace ListaRzeczyTUI
             Application.Run(d);
         }
 
+        private static void SubTaskDetails(Tasks.SubTask subtask)
+        {
+            var ButtonOK = new Button("Ok", is_default: true);
+
+            ButtonOK.MouseClick += delegate (MouseEventArgs args)
+            {
+                Application.RequestStop();
+            };
+
+            ButtonOK.KeyDown += delegate (KeyEventEventArgs args)
+            {
+                if (args.KeyEvent.Key == Key.Enter)
+                {
+                    Application.RequestStop();
+                }
+            };
+
+            var d = new Dialog("Details:", 60, 20, ButtonOK);
+
+            var SubTaskDetailsLabel = new Label(string.Format("Title: {0}\nCreation Date: {1}\nEnd Date: {2}\nDone: {3}\nDescription: {4}",
+            Tasks.FormatTitle(subtask, 50), subtask.creationdate, subtask.enddate.ToString("dd.MM.yyyy"), subtask.isdone ? "Yes" : "No", subtask.description))
+            {
+                X = Pos.Center(),
+                Y = Pos.Center()
+            };
+
+            d.Add(SubTaskDetailsLabel);
+
+            Application.Run(d);
+        }
+
         static private void TasksWindow()
         {
             Application.Init();
-            Colors.ColorSchemes.Add("Test", new ColorScheme());
+            Colors.ColorSchemes.Add("TextViewColor", new ColorScheme());
             Colors.ColorSchemes.Add("Inactive", new ColorScheme());
-            Colors.ColorSchemes["Test"].Normal = Application.Driver.MakeAttribute(Color.Black, Color.Cyan);
+            Colors.ColorSchemes["TextViewColor"].Normal = Application.Driver.MakeAttribute(Color.Black, Color.DarkGray);
             Colors.ColorSchemes["Inactive"].Normal = Application.Driver.MakeAttribute(Color.Gray, Color.Blue);
             Colors.ColorSchemes["Inactive"].Focus = Colors.ColorSchemes["Inactive"].Normal;
             Colors.ColorSchemes["Inactive"].HotNormal = Colors.ColorSchemes["Inactive"].Normal;
             Colors.ColorSchemes["Inactive"].HotFocus = Colors.ColorSchemes["Inactive"].Normal;
             int lastsort = 3;
-            //TasksListDisplay tasksListDisplay = new TasksListDisplay(Tasks.taskslist);
 
             var top = Application.Top;
             ListView TasksListView;
 
-            // Creates the top-level window to show
             var win = new Window("Tasks List")
             {
                 X = 0,
-                Y = 1, // Leave one row for the toplevel menu
+                Y = 1,
 
-                // By using Dim.Fill(), it will automatically resize without manual intervention
                 Width = Dim.Fill(),
                 Height = Dim.Fill()
             };
@@ -948,7 +988,6 @@ namespace ListaRzeczyTUI
                 Y = 0
             };
 
-            //TasksListView = new ListView(Tasks.taskslist.Select(x => x.title + (x.isdone ? " Done" : " Not")).ToList())
             TasksListView = new ListView(new TasksListDisplay(Tasks.taskslist))
             {
                 X = 0,
@@ -959,15 +998,11 @@ namespace ListaRzeczyTUI
 
             TasksListFrameView.Add(TasksListView, TasksListLabel);
 
-            // Creates a menubar, the item "New" has a help menu.
             var menu = new MenuBar(new MenuBarItem[]
             {
                 new MenuBarItem ("_File", new MenuItem []
                 {
-                    //new MenuItem ("_New", "Creates new file", NewFile),
-                    //new MenuItem ("_Close", "", () => Close ()),
-                    //new MenuItem ("_Quit", "", () => { if (Quit ()) top.Running = false; })
-                    new MenuItem ("_Quit", "", () => { top.Running = false; })
+                    new MenuItem ("_Quit", "", () => { Application.Shutdown(); })
                 }),
                 new MenuBarItem ("_Edit", new MenuItem []
                 {
@@ -1072,7 +1107,6 @@ namespace ListaRzeczyTUI
                 if (AddTask() == true)
                 {
                     Tasks.SortTasks(lastsort);
-                    //TasksListView.SetSource(Tasks.taskslist.Select(x => x.title + (x.isdone ? " Done" : " Not")).ToList());
                     TasksListView.SetNeedsDisplay();
                     ButtonEdit.ColorScheme = ButtonEdit.SuperView.ColorScheme;
                     ButtonDelete.ColorScheme = ButtonDelete.SuperView.ColorScheme;
@@ -1086,7 +1120,6 @@ namespace ListaRzeczyTUI
                     if (AddTask() == true)
                     {
                         Tasks.SortTasks(lastsort);
-                        //TasksListView.SetSource(Tasks.taskslist.Select(x => x.title + (x.isdone ? " Done" : " Not")).ToList());
                         TasksListView.SetNeedsDisplay();
                         ButtonEdit.ColorScheme = ButtonEdit.SuperView.ColorScheme;
                         ButtonDelete.ColorScheme = ButtonDelete.SuperView.ColorScheme;
@@ -1100,7 +1133,6 @@ namespace ListaRzeczyTUI
                 {
                     if(EditTask(Tasks.taskslist[TasksListView.SelectedItem]) == true)
                     {
-                        //TasksListView.SetSource(Tasks.taskslist.Select(x => x.title + (x.isdone ? " Done" : " Not")).ToList());
                         TasksListView.SetNeedsDisplay();
                     }
                 }
@@ -1112,7 +1144,6 @@ namespace ListaRzeczyTUI
                 {
                     if (EditTask(Tasks.taskslist[TasksListView.SelectedItem]) == true)
                     {
-                        //TasksListView.SetSource(Tasks.taskslist.Select(x => x.title + (x.isdone ? " Done" : " Not")).ToList());
                         TasksListView.SetNeedsDisplay();
                     }
                 }
@@ -1124,7 +1155,6 @@ namespace ListaRzeczyTUI
                 {
                     if (DeleteTask(TasksListView.SelectedItem) == true)
                     {
-                        //TasksListView.SetSource(Tasks.taskslist.Select(x => x.title + (x.isdone ? " Done" : " Not")).ToList());
                         if (TasksListView.SelectedItem > Tasks.taskslist.Count - 1)
                         {
                             TasksListView.MoveUp();
@@ -1145,7 +1175,6 @@ namespace ListaRzeczyTUI
                 {
                     if (DeleteTask(TasksListView.SelectedItem) == true)
                     {
-                        //TasksListView.SetSource(Tasks.taskslist.Select(x => x.title + (x.isdone ? " Done" : " Not")).ToList());
                         if (TasksListView.SelectedItem > Tasks.taskslist.Count - 1)
                         {
                             TasksListView.MoveUp();
@@ -1177,7 +1206,6 @@ namespace ListaRzeczyTUI
                 }
             };
 
-
             var ASCIIlabel = new Label("       .@\n     ,@@@@\n   ,@@@.  &@@,\n @@@@   &@@@@@@@\n@@@@   &@&   @@@@\n '.@@@.   .@@@@'\n   '@@@@@@@@@'\n      '@@@'")
             {
                 X = Pos.Right(TasksListFrameView),
@@ -1187,45 +1215,20 @@ namespace ListaRzeczyTUI
             ButtonsFrameView.Add(ButtonAdd, ButtonEdit, ButtonDelete);
             win.Add(TasksListFrameView, ButtonsFrameView, ASCIIlabel);
 
-            /*var login = new Label("Login: ") { X = 3, Y = 2 };
-            var password = new Label("Password: ")
-            {
-                X = Pos.Left(login),
-                Y = Pos.Top(login) + 1
-            };
-            var loginText = new TextField("")
-            {
-                X = Pos.Right(password),
-                Y = Pos.Top(login),
-                Width = 40
-            };
-            var passText = new TextField("")
-            {
-                Secret = true,
-                X = Pos.Left(loginText),
-                Y = Pos.Top(password),
-                Width = Dim.Width(loginText)
-            };
-
-            // Add some controls, 
-            win.Add(
-                // The ones with my favorite layout system, Computed
-                login, password, loginText, passText,
-
-                // The ones laid out like an australopithecus, with Absolute positions:
-                new CheckBox(3, 6, "Remember me"),
-                //new RadioGroup(3, 8, new[] { "_Personal", "_Company" }),
-                new Button(3, 14, "Ok"),
-                new Button(10, 14, "Cancel"),
-                new Label(3, 18, "Press F9 or ESC plus 9 to activate the menubar")
-            );*/
-
             Application.Run();
         }
 
         static void Main()
         {
             CultureInfo.CurrentCulture = new CultureInfo("pl-PL");
+            DB = new TasksDBConnection();
+            //TasksContext DB = new TasksContext();
+            //DB.Tasks.Add(new Tasks.Task("sadasdasda", "adsadas", DateTime.Now, 0));
+            //DB.Tasks.Remove(DB.Tasks.Find(2));
+            //DB.Tasks.Remove(DB.Tasks.Find(3));
+            //DB.SaveChanges();
+            //var thing = DB.Tasks.ToList();
+            //var thing = DB.Tasks.Find(0);
 
             TasksWindow();
         }

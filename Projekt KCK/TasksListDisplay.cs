@@ -46,23 +46,19 @@ namespace ListaRzeczyTUI
         public void Render(ListView container, ConsoleDriver driver, bool selected, int item, int col, int line, int width)
         {
             container.Move(col, line);
-            // Equivalent to an interpolated string like $"{Scenarios[item].Name, -widtestname}"; if such a thing were possible
-            //var s = String.Format(String.Format("{{0,{0}}}", -_nameColumnWidth), Scenario.ScenarioMetadata.GetName(Scenarios[item]));
-            //RenderUstr(driver, $"{s}  {Scenario.ScenarioMetadata.GetDescription(Scenarios[item])}", col, line, width);
+
             string s;
             if(TasksList != null)
             {
                 s = string.Format("{0,-25} {1}      {2,-9}     {3}",
-                    Tasks.FormatTitle(TasksList[item], 25) /*TasksList[item].title.Substring(0, TasksList[item].title.Length < 25 ? TasksList[item].title.Length : 22)
-                    + (TasksList[item].title.Length < 25 ? "" : "...")*/,
+                    Tasks.FormatTitle(TasksList[item], 25),
                     TasksList[item].enddate.ToString("dd.MM.yy"), Tasks.priorities[TasksList[item].priority], (TasksList[item].isdone ? "Done" : ""));
                 RenderUstr(container, driver, s, col, line, width, TasksList[item].priority, TasksList[item].enddate, selected, TasksList[item].isdone);
             }
             else
             {
                 s = string.Format("{0,-25} {1}          {2}",
-                    Tasks.FormatTitle(SubTasksList[item], 25) /*SubTasksList[item].title.Substring(0, SubTasksList[item].title.Length < 25 ? SubTasksList[item].title.Length : 22)
-                    + (SubTasksList[item].title.Length < 25 ? "" : "...")*/,
+                    Tasks.FormatTitle(SubTasksList[item], 25),
                     SubTasksList[item].enddate.ToString("dd.MM.yy"), (SubTasksList[item].isdone ? "Done" : ""));
                 RenderUstr(container, driver, s, col, line, width, -1, SubTasksList[item].enddate, selected, SubTasksList[item].isdone);
             }
@@ -75,14 +71,10 @@ namespace ListaRzeczyTUI
             if(isdone == true)
             {
                 SetColor(container, driver, (int)styles.normal, selected, selected ? Color.Green : Color.BrightGreen);
-                /*driver.SetAttribute(driver.MakeAttribute(selected ? Color.Green : Color.BrightGreen, 
-                    container.HasFocus ? (selected ? Color.Gray : Color.Blue) : Color.Blue));*/
             }
             else if(date <= DateTime.Now)
             {
                 SetColor(container, driver, (int)styles.late, selected, Color.BrightRed);
-                /*driver.SetAttribute(driver.MakeAttribute(Color.BrightRed, 
-                    container.HasFocus ? (selected ? Color.BrightYellow : Color.Red) : Color.Red));*/
             }
             else
             {
@@ -91,43 +83,31 @@ namespace ListaRzeczyTUI
                     case "VeryHigh":
                         {
                             SetColor(container, driver, (int)styles.normal, selected, selected ? Color.Magenta : Color.BrightMagenta);
-                            /*driver.SetAttribute(driver.MakeAttribute(selected ? Color.Magenta : Color.BrightMagenta, 
-                                container.HasFocus ? (selected ? Color.Gray : Color.Blue) : Color.Blue));*/
                             break;
                         }
                     case "High":
                         {
                             SetColor(container, driver, (int)styles.dark, selected, Color.BrightYellow);
-                            /*driver.SetAttribute(driver.MakeAttribute(Color.BrightYellow, 
-                                container.HasFocus ? (selected ? Color.Gray : Color.Blue) : Color.Blue));*/
                             break;
                         }
                     case "Medium":
                         {
                             SetColor(container, driver, (int)styles.dark, selected, Color.BrighCyan);
-                            /*driver.SetAttribute(driver.MakeAttribute(Color.BrighCyan, 
-                                container.HasFocus ? (selected ? Color.Gray : Color.Blue) : Color.Blue));*/
                             break;
                         }
                     case "Low":
                         {
                             SetColor(container, driver, (int)styles.normal, selected, Color.Cyan);
-                            /*driver.SetAttribute(driver.MakeAttribute(Color.Cyan, 
-                                container.HasFocus ? (selected ? Color.Gray : Color.Blue) : Color.Blue));*/
                             break;
                         }
                     case "VeryLow":
                         {
                             SetColor(container, driver, (int)styles.normal, selected, selected ? Color.Black : Color.DarkGray);
-                            /*driver.SetAttribute(driver.MakeAttribute(selected ? Color.Black : Color.DarkGray, 
-                                container.HasFocus ? (selected ? Color.Gray : Color.Blue) : Color.Blue));*/
                             break;
                         }
                     default:
                         {
                             SetColor(container, driver, (int)styles.normal, selected, selected ? Color.Black : Color.White);
-                            /*driver.SetAttribute(driver.MakeAttribute(selected ? Color.Black : Color.White, 
-                                container.HasFocus ? (selected ? Color.Gray : Color.Blue) : Color.Blue));*/
                             break;
                         }
                 }
