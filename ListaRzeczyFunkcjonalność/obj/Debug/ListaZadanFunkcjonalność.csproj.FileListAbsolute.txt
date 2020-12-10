@@ -16,5 +16,3 @@ C:\Users\user\source\repos\Projekt KCK\ListaRzeczyFunkcjonalność\bin\Debug\Sys
 C:\Users\user\source\repos\Projekt KCK\ListaRzeczyFunkcjonalność\bin\Debug\EntityFramework.xml
 C:\Users\user\source\repos\Projekt KCK\ListaRzeczyFunkcjonalność\bin\Debug\EntityFramework.SqlServer.xml
 C:\Users\user\source\repos\Projekt KCK\ListaRzeczyFunkcjonalność\bin\Debug\System.Data.SQLite.xml
-C:\Users\user\source\repos\Projekt KCK\ListaRzeczyFunkcjonalność\obj\Debug\ListaZadanFunkcjonalnosc.Migrations.Initial.resources
-C:\Users\user\source\repos\Projekt KCK\ListaRzeczyFunkcjonalność\obj\Debug\ListaZadanFunkcjonalność.csproj.GenerateResource.cache

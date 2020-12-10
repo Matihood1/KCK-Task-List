@@ -1,9 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.ComponentModel;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace ListaZadanFunkcjonalnosc
 {
@@ -42,10 +38,19 @@ namespace ListaZadanFunkcjonalnosc
             PriorityAsc = 8,
             PriorityDesc = 9
         }
+        private enum taskproperties
+        {
+            title,
+            description,
+            isdone,
+            enddate,
+            creationdate,
+            priority
+        }
 
         public interface ITask
         {
-            string title { get;}
+            string title { get; }
             string description { get; }
             bool isdone { get; }
             DateTime enddate { get; }
@@ -137,7 +142,7 @@ namespace ListaZadanFunkcjonalnosc
             }
         }
 
-        public class SubTask: ITask
+        public class SubTask : ITask
         {
             public int id { get; set; }
             public string title { get; set; }
@@ -171,24 +176,14 @@ namespace ListaZadanFunkcjonalnosc
 
         public static string FormatTitle(ITask task, int length)
         {
-            if(length > 3)
+            if (length > 3)
             {
-                return task.title.Substring(0, task.title.Length < length ? task.title.Length : length-3) + (task.title.Length < length ? "" : "...");
+                return task.title.Substring(0, task.title.Length < length ? task.title.Length : length - 3) + (task.title.Length < length ? "" : "...");
             }
             else
             {
                 return task.title;
             }
-        }
-
-        private enum taskproperties
-        {
-            title,
-            description,
-            isdone,
-            enddate,
-            creationdate,
-            priority
         }
 
         public static void SortTasks(int type)
@@ -247,43 +242,5 @@ namespace ListaZadanFunkcjonalnosc
                     }
             }
         }
-
-        /*public static void SortByTitle(bool ascending)
-        {
-            if(ascending)
-                taskslist.Sort((a, b) => a.title.CompareTo(b.title));
-            else
-                taskslist.Sort((a, b) => b.title.CompareTo(a.title));
-        }
-
-        public static void SortByCreationDate(bool ascending)
-        {
-            if (ascending)
-                taskslist.Sort((a, b) => a.creationdate.CompareTo(b.creationdate));
-            else
-                taskslist.Sort((a, b) => b.creationdate.CompareTo(a.creationdate));
-        }
-
-        public static void SortByEndDate(bool ascending)
-        {
-            if (ascending)
-                taskslist.Sort((a, b) => a.enddate == b.enddate ? a.title.CompareTo(b.title) : a.enddate.CompareTo(b.enddate));
-            else
-                taskslist.Sort((a, b) => a.enddate == b.enddate ? b.title.CompareTo(a.title) : b.enddate.CompareTo(a.enddate));
-        }
-        public static void SortByDone(bool ascending)
-        {
-            if (ascending)
-                taskslist.Sort((a, b) => a.isdone == b.isdone ? a.title.CompareTo(b.title) : a.isdone.CompareTo(b.isdone));
-            else
-                taskslist.Sort((a, b) => a.isdone == b.isdone ? b.title.CompareTo(a.title) : b.isdone.CompareTo(a.isdone));
-        }
-        public static void SortByPriority(bool ascending)
-        {
-            if (ascending)
-                taskslist.Sort((a, b) => a.priority == b.priority ? a.title.CompareTo(b.title) : a.priority.CompareTo(b.priority));
-            else
-                taskslist.Sort((a, b) => a.priority == b.priority ? b.title.CompareTo(a.title) : b.priority.CompareTo(a.priority));
-        }*/
     }
 }

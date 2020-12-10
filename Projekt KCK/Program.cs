@@ -1,11 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Terminal.Gui;
-using ListaZadanFunkcjonalnosc;
+﻿using ListaZadanFunkcjonalnosc;
+using System;
 using System.Globalization;
+using System.Linq;
+using Terminal.Gui;
 
 namespace ListaRzeczyTUI
 {
@@ -135,7 +132,6 @@ namespace ListaRzeczyTUI
 
             if (IsCreate)
             {
-                //Tasks.taskslist.Add(tmp);
                 DB.AddTask(new Tasks.Task(TaskTitleField.Text.ToString(), TaskDescriptionField.Text.ToString(), TaskEndDateField.Date,
                     Tasks.prioritiesinv[TaskPriorityField.Text.ToString()]));
 
@@ -269,8 +265,6 @@ namespace ListaRzeczyTUI
 
             if (IsEdit)
             {
-                /*selectedtask.Update(TaskTitleField.Text.ToString(), TaskDescriptionField.Text.ToString(),
-                    TaskIsDoneCheckBox.Checked, TaskEndDateField.Date, Tasks.prioritiesinv[TaskPriorityField.Text.ToString()]);*/
                 DB.EditTask(selectedtask, TaskTitleField.Text.ToString(), TaskDescriptionField.Text.ToString(),
                     TaskIsDoneCheckBox.Checked, TaskEndDateField.Date, Tasks.prioritiesinv[TaskPriorityField.Text.ToString()]);
             }
@@ -324,7 +318,6 @@ namespace ListaRzeczyTUI
 
             if (IsDelete)
             {
-                //Tasks.taskslist.RemoveAt(taskindex);
                 DB.DeleteTask(taskindex);
             }
 
@@ -428,7 +421,6 @@ namespace ListaRzeczyTUI
 
             if (IsCreate)
             {
-                //selectedtask.SubTasks.Add(new Tasks.SubTask(TaskTitleField.Text.ToString(), TaskDescriptionField.Text.ToString(), TaskEndDateField.Date));
                 DB.AddSubTask(selectedtask, new Tasks.SubTask(TaskTitleField.Text.ToString(), TaskDescriptionField.Text.ToString(), TaskEndDateField.Date));
             }
 
@@ -470,7 +462,7 @@ namespace ListaRzeczyTUI
                 Y = Pos.Top(TaskEndDateLabel),
                 Date = selectedtask.enddate
             };
-            
+
             var TaskIsDoneLabel = new Label("Done: ")
             {
                 X = Pos.Right(TaskEndDateField) + 1,
@@ -547,7 +539,6 @@ namespace ListaRzeczyTUI
 
             if (IsEdit)
             {
-                //selectedtask.Update(TaskTitleField.Text.ToString(), TaskDescriptionField.Text.ToString(), TaskIsDoneCheckBox.Checked, TaskEndDateField.Date);
                 DB.EditSubTask(parenttask, selectedtask, TaskTitleField.Text.ToString(), TaskDescriptionField.Text.ToString(), TaskIsDoneCheckBox.Checked, TaskEndDateField.Date);
             }
 
@@ -600,7 +591,6 @@ namespace ListaRzeczyTUI
 
             if (IsDelete)
             {
-                //selectedtask.SubTasks.RemoveAt(taskindex);
                 DB.DeleteSubTask(selectedtask, taskindex);
             }
 
@@ -628,7 +618,7 @@ namespace ListaRzeczyTUI
             };
 
             var TaskDetailsLabel = new Label(string.Format("Title: {0}\nCreation Date: {1}\nEnd Date: {2}\nPriority {3}\nDone: {4}\nDescription: {5}",
-            Tasks.FormatTitle(selectedtask, 50), selectedtask.creationdate, selectedtask.enddate.ToString("dd.MM.yyyy"), Tasks.priorities[selectedtask.priority], 
+            Tasks.FormatTitle(selectedtask, 50), selectedtask.creationdate, selectedtask.enddate.ToString("dd.MM.yyyy"), Tasks.priorities[selectedtask.priority],
             selectedtask.isdone ? "Yes" : "No", selectedtask.description))
             {
                 X = 1,
@@ -1131,7 +1121,7 @@ namespace ListaRzeczyTUI
             {
                 if (Tasks.taskslist.Count > 0)
                 {
-                    if(EditTask(Tasks.taskslist[TasksListView.SelectedItem]) == true)
+                    if (EditTask(Tasks.taskslist[TasksListView.SelectedItem]) == true)
                     {
                         TasksListView.SetNeedsDisplay();
                     }
@@ -1191,7 +1181,7 @@ namespace ListaRzeczyTUI
 
             TasksListView.OpenSelectedItem += delegate (ListViewItemEventArgs args)
             {
-                if(Tasks.taskslist.Count > 0)
+                if (Tasks.taskslist.Count > 0)
                 {
                     TaskDetails(Tasks.taskslist[TasksListView.SelectedItem]);
                 }
