@@ -54,7 +54,7 @@ namespace ListaZadanFunkcjonalnosc
 
         public class Task : ITask
         {
-            public List<SubTask> SubTasks;
+            public virtual List<SubTask> SubTasks { get; set; }
 
             public int id { get; set; }
             public string title { get; set; }

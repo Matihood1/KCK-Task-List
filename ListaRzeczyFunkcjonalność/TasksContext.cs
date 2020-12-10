@@ -18,6 +18,12 @@ namespace ListaZadanFunkcjonalnosc
         public DbSet<Tasks.Task> Tasks { get; set; }
         public DbSet<Tasks.SubTask> SubTasks { get; set; }
 
+
+        protected override void OnModelCreating(DbModelBuilder modelBuilder)
+        {
+            base.OnModelCreating(modelBuilder);
+            modelBuilder.Entity<Tasks.Task>().HasMany(i => i.SubTasks).WithMany();
+        }
         /*protected override void OnModelCreating(DbModelBuilder modelBuilder)
         {
             Database.SetInitializer<TasksContext>(null);
