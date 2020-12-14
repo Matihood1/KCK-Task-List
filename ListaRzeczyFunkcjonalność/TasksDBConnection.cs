@@ -37,10 +37,8 @@ namespace ListaZadanFunkcjonalnosc
 
         public void AddSubTask(Tasks.Task task, Tasks.SubTask subtask)
         {
-            //subtask.id = BitConverter.ToInt32(Guid.NewGuid().ToByteArray(), 0);
             task.SubTasks.Add(subtask);
             DB.SubTasks.Add(subtask);
-            //DB.Tasks.Find(task.id).SubTasks.Add(subtask);
             DB.SaveChanges();
         }
 
@@ -48,7 +46,6 @@ namespace ListaZadanFunkcjonalnosc
         {
             subtask.Update(title, description, isdone, enddate);
             DB.SubTasks.First(x => x.id == subtask.id).Update(title, description, isdone, enddate);
-            //DB.Tasks.Find(task.id).SubTasks.First(x => x.id == subtask.id).Update(title, description, isdone, enddate);
             DB.SaveChanges();
         }
 
@@ -57,7 +54,6 @@ namespace ListaZadanFunkcjonalnosc
             int id = task.SubTasks[index].id;
             task.SubTasks.RemoveAt(index);
             DB.SubTasks.Remove(DB.SubTasks.First(x => x.id == id));
-            //DB.Tasks.Find(task.id).SubTasks.Remove(DB.Tasks.Find(task.id).SubTasks.First(x => x.id == id));
             DB.SaveChanges();
         }
     }

@@ -81,7 +81,8 @@ namespace ListaRzeczyTUI
             };
 
             var ButtonOK = new Button("Ok", is_default: true);
-            ButtonOK.MouseClick += delegate (MouseEventArgs args)
+
+            ButtonOK.Clicked += delegate ()
             {
                 if (TaskTitleField.Text.Length > 0 && TaskTitleField.Text.Length <= 50)
                 {
@@ -93,34 +94,12 @@ namespace ListaRzeczyTUI
                     TitleControlDialog();
                 }
             };
-            ButtonOK.KeyDown += delegate (KeyEventEventArgs args)
-            {
-                if (args.KeyEvent.Key == Key.Enter)
-                {
-                    if (TaskTitleField.Text.Length > 0 && TaskTitleField.Text.Length <= 50)
-                    {
-                        IsManaged = true;
-                        Application.RequestStop();
-                    }
-                    else
-                    {
-                        TitleControlDialog();
-                    }
-                }
-            };
 
             var ButtonCancel = new Button("Cancel");
-            ButtonCancel.MouseClick += delegate (MouseEventArgs args)
+
+            ButtonCancel.Clicked += delegate ()
             {
                 Application.RequestStop();
-            };
-
-            ButtonCancel.KeyDown += delegate (KeyEventEventArgs args)
-            {
-                if (args.KeyEvent.Key == Key.Enter)
-                {
-                    Application.RequestStop();
-                }
             };
 
             var d = new Dialog("New Task", 60, 20, ButtonOK, ButtonCancel);
@@ -171,22 +150,21 @@ namespace ListaRzeczyTUI
             bool IsDelete = false;
 
             var ButtonYes = new Button("Yes");
-            ButtonYes.MouseClick += delegate (MouseEventArgs args)
+
+            ButtonYes.Clicked += delegate ()
             {
                 IsDelete = true;
                 Application.RequestStop();
             };
-            ButtonYes.KeyDown += delegate (KeyEventEventArgs args)
-            {
-                if (args.KeyEvent.Key == Key.Enter)
-                {
-                    IsDelete = true;
-                    Application.RequestStop();
-                }
-            };
 
             var ButtonNo = new Button("No", is_default: true);
-            ButtonNo.MouseClick += delegate (MouseEventArgs args)
+
+            ButtonNo.Clicked += delegate ()
+            {
+                Application.RequestStop();
+            };
+
+            /*ButtonNo.MouseClick += delegate (MouseEventArgs args)
             {
                 Application.RequestStop();
             };
@@ -197,7 +175,7 @@ namespace ListaRzeczyTUI
                 {
                     Application.RequestStop();
                 }
-            };
+            };*/
 
             var d = new Dialog("Delete Task " + Tasks.taskslist[taskindex].title, 60, 10, ButtonYes, ButtonNo);
 
@@ -275,7 +253,8 @@ namespace ListaRzeczyTUI
             };
 
             var ButtonOK = new Button("Ok", is_default: true);
-            ButtonOK.MouseClick += delegate (MouseEventArgs args)
+
+            ButtonOK.Clicked += delegate ()
             {
                 if (TaskTitleField.Text.Length > 0 && TaskTitleField.Text.Length <= 50)
                 {
@@ -288,34 +267,11 @@ namespace ListaRzeczyTUI
                 }
             };
 
-            ButtonOK.KeyDown += delegate (KeyEventEventArgs args)
-            {
-                if (args.KeyEvent.Key == Key.Enter)
-                {
-                    if (TaskTitleField.Text.Length > 0 && TaskTitleField.Text.Length <= 50)
-                    {
-                        IsManaged = true;
-                        Application.RequestStop();
-                    }
-                    else
-                    {
-                        TitleControlDialog();
-                    }
-                }
-            };
-
             var ButtonCancel = new Button("Cancel");
-            ButtonCancel.MouseClick += delegate (MouseEventArgs args)
+
+            ButtonCancel.Clicked += delegate ()
             {
                 Application.RequestStop();
-            };
-
-            ButtonCancel.KeyDown += delegate (KeyEventEventArgs args)
-            {
-                if (args.KeyEvent.Key == Key.Enter)
-                {
-                    Application.RequestStop();
-                }
             };
 
             var d = new Dialog("New Subtask ", 60, 20, ButtonOK, ButtonCancel);
@@ -363,32 +319,18 @@ namespace ListaRzeczyTUI
             bool IsDelete = false;
 
             var ButtonYes = new Button("Yes");
-            ButtonYes.MouseClick += delegate (MouseEventArgs args)
+
+            ButtonYes.Clicked += delegate ()
             {
                 IsDelete = true;
                 Application.RequestStop();
             };
-            ButtonYes.KeyDown += delegate (KeyEventEventArgs args)
-            {
-                if (args.KeyEvent.Key == Key.Enter)
-                {
-                    IsDelete = true;
-                    Application.RequestStop();
-                }
-            };
 
             var ButtonNo = new Button("No", is_default: true);
-            ButtonNo.MouseClick += delegate (MouseEventArgs args)
+
+            ButtonNo.Clicked += delegate ()
             {
                 Application.RequestStop();
-            };
-
-            ButtonNo.KeyDown += delegate (KeyEventEventArgs args)
-            {
-                if (args.KeyEvent.Key == Key.Enter)
-                {
-                    Application.RequestStop();
-                }
             };
 
             var d = new Dialog("Delete Subtask " + Tasks.taskslist[taskindex].title, 60, 10, ButtonYes, ButtonNo);
@@ -415,17 +357,9 @@ namespace ListaRzeczyTUI
         {
             var ButtonOK = new Button("Ok", is_default: true);
 
-            ButtonOK.MouseClick += delegate (MouseEventArgs args)
+            ButtonOK.Clicked += delegate ()
             {
                 Application.RequestStop();
-            };
-
-            ButtonOK.KeyDown += delegate (KeyEventEventArgs args)
-            {
-                if (args.KeyEvent.Key == Key.Enter)
-                {
-                    Application.RequestStop();
-                }
             };
 
             var d = new Dialog("Error!", 50, 10, ButtonOK);
@@ -503,17 +437,9 @@ namespace ListaRzeczyTUI
                 Y = Pos.Bottom(win) - 4,
             };
 
-            ButtonExit.MouseClick += delegate (MouseEventArgs args)
+            ButtonExit.Clicked += delegate ()
             {
                 Application.RequestStop();
-            };
-
-            ButtonExit.KeyDown += delegate (KeyEventEventArgs args)
-            {
-                if (args.KeyEvent.Key == Key.Enter)
-                {
-                    Application.RequestStop();
-                }
             };
 
             SubTasksListFrameView.Add(SubTasksListView, SubTasksListLabel);
@@ -614,7 +540,7 @@ namespace ListaRzeczyTUI
                 Y = Pos.Bottom(ButtonEdit) + 1,
             };
 
-            ButtonAdd.MouseClick += delegate (MouseEventArgs args)
+            ButtonAdd.Clicked += delegate ()
             {
                 if (ManageSubTask(selectedtask, null) == true)
                 {
@@ -625,21 +551,7 @@ namespace ListaRzeczyTUI
                 }
             };
 
-            ButtonAdd.KeyDown += delegate (KeyEventEventArgs args)
-            {
-                if (args.KeyEvent.Key == Key.Enter)
-                {
-                    if (ManageSubTask(selectedtask, null) == true)
-                    {
-                        selectedtask.SortSubTasks(lastsort);
-                        SubTasksListView.SetNeedsDisplay();
-                        ButtonEdit.ColorScheme = ButtonEdit.SuperView.ColorScheme;
-                        ButtonDelete.ColorScheme = ButtonDelete.SuperView.ColorScheme;
-                    }
-                }
-            };
-
-            ButtonEdit.MouseClick += delegate (MouseEventArgs args)
+            ButtonEdit.Clicked += delegate ()
             {
                 if (selectedtask.SubTasks.Count > 0)
                 {
@@ -650,40 +562,9 @@ namespace ListaRzeczyTUI
                 }
             };
 
-            ButtonEdit.KeyDown += delegate (KeyEventEventArgs args)
-            {
-                if (selectedtask.SubTasks.Count > 0 && args.KeyEvent.Key == Key.Enter)
-                {
-                    if (ManageSubTask(selectedtask, selectedtask.SubTasks[SubTasksListView.SelectedItem]) == true)
-                    {
-                        SubTasksListView.SetNeedsDisplay();
-                    }
-                }
-            };
-
-            ButtonDelete.MouseClick += delegate (MouseEventArgs args)
+            ButtonDelete.Clicked += delegate ()
             {
                 if (selectedtask.SubTasks.Count > 0)
-                {
-                    if (DeleteSubTask(selectedtask, SubTasksListView.SelectedItem) == true)
-                    {
-                        if (SubTasksListView.SelectedItem > selectedtask.SubTasks.Count - 1)
-                        {
-                            SubTasksListView.MoveUp();
-                        }
-                        SubTasksListView.SetNeedsDisplay();
-                    }
-                    if (Tasks.taskslist.Count.Equals(0))
-                    {
-                        ButtonEdit.ColorScheme = Colors.ColorSchemes["Inactive"];
-                        ButtonDelete.ColorScheme = Colors.ColorSchemes["Inactive"];
-                    }
-                }
-            };
-
-            ButtonDelete.KeyDown += delegate (KeyEventEventArgs args)
-            {
-                if (selectedtask.SubTasks.Count > 0 && args.KeyEvent.Key == Key.Enter)
                 {
                     if (DeleteSubTask(selectedtask, SubTasksListView.SelectedItem) == true)
                     {
@@ -720,17 +601,9 @@ namespace ListaRzeczyTUI
         {
             var ButtonOK = new Button("Ok", is_default: true);
 
-            ButtonOK.MouseClick += delegate (MouseEventArgs args)
+            ButtonOK.Clicked += delegate ()
             {
                 Application.RequestStop();
-            };
-
-            ButtonOK.KeyDown += delegate (KeyEventEventArgs args)
-            {
-                if (args.KeyEvent.Key == Key.Enter)
-                {
-                    Application.RequestStop();
-                }
             };
 
             var d = new Dialog("Details:", 60, 20, ButtonOK);
@@ -895,7 +768,7 @@ namespace ListaRzeczyTUI
                 Y = Pos.Bottom(ButtonEdit) + 1,
             };
 
-            ButtonAdd.MouseClick += delegate (MouseEventArgs args)
+            ButtonAdd.Clicked += delegate ()
             {
                 if (ManageTask(null) == true)
                 {
@@ -906,21 +779,7 @@ namespace ListaRzeczyTUI
                 }
             };
 
-            ButtonAdd.KeyDown += delegate (KeyEventEventArgs args)
-            {
-                if (args.KeyEvent.Key == Key.Enter)
-                {
-                    if (ManageTask(null) == true)
-                    {
-                        Tasks.SortTasks(lastsort);
-                        TasksListView.SetNeedsDisplay();
-                        ButtonEdit.ColorScheme = ButtonEdit.SuperView.ColorScheme;
-                        ButtonDelete.ColorScheme = ButtonDelete.SuperView.ColorScheme;
-                    }
-                }
-            };
-
-            ButtonEdit.MouseClick += delegate (MouseEventArgs args)
+            ButtonEdit.Clicked += delegate ()
             {
                 if (Tasks.taskslist.Count > 0)
                 {
@@ -931,40 +790,9 @@ namespace ListaRzeczyTUI
                 }
             };
 
-            ButtonEdit.KeyDown += delegate (KeyEventEventArgs args)
-            {
-                if (Tasks.taskslist.Count > 0 && args.KeyEvent.Key == Key.Enter)
-                {
-                    if (ManageTask(Tasks.taskslist[TasksListView.SelectedItem]) == true)
-                    {
-                        TasksListView.SetNeedsDisplay();
-                    }
-                }
-            };
-
-            ButtonDelete.MouseClick += delegate (MouseEventArgs args)
+            ButtonDelete.Clicked += delegate ()
             {
                 if (Tasks.taskslist.Count > 0)
-                {
-                    if (DeleteTask(TasksListView.SelectedItem) == true)
-                    {
-                        if (TasksListView.SelectedItem > Tasks.taskslist.Count - 1)
-                        {
-                            TasksListView.MoveUp();
-                        }
-                        TasksListView.SetNeedsDisplay();
-                    }
-                    if (Tasks.taskslist.Count.Equals(0))
-                    {
-                        ButtonEdit.ColorScheme = Colors.ColorSchemes["Inactive"];
-                        ButtonDelete.ColorScheme = Colors.ColorSchemes["Inactive"];
-                    }
-                }
-            };
-
-            ButtonDelete.KeyDown += delegate (KeyEventEventArgs args)
-            {
-                if (Tasks.taskslist.Count > 0 && args.KeyEvent.Key == Key.Enter)
                 {
                     if (DeleteTask(TasksListView.SelectedItem) == true)
                     {
