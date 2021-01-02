@@ -9,20 +9,20 @@ namespace ListaZadanFunkcjonalnosc
 
         public static Dictionary<int, string> priorities = new Dictionary<int, string>()
         {
-            { 0, "Very High" },
-            { 1, "High" },
+            { 0, "Very Low" },
+            { 1, "Low" },
             { 2, "Medium" },
-            { 3, "Low" },
-            { 4, "Very Low" }
+            { 3, "High" },
+            { 4, "Very High" }
         };
 
         public static Dictionary<string, int> prioritiesinv = new Dictionary<string, int>()
         {
-            { "Very High", 0 },
-            { "High", 1 },
+            { "Very Low", 0 },
+            { "Low", 1 },
             { "Medium", 2 },
-            { "Low", 3 },
-            { "Very Low", 4 }
+            { "High", 3 },
+            { "Very High", 4 }
         };
 
         public enum sorttype
@@ -38,7 +38,7 @@ namespace ListaZadanFunkcjonalnosc
             PriorityAsc = 8,
             PriorityDesc = 9
         }
-        private enum taskproperties
+        /*private enum taskproperties
         {
             title,
             description,
@@ -46,7 +46,7 @@ namespace ListaZadanFunkcjonalnosc
             enddate,
             creationdate,
             priority
-        }
+        }*/
 
         public interface ITask
         {
@@ -55,6 +55,8 @@ namespace ListaZadanFunkcjonalnosc
             bool isdone { get; }
             DateTime enddate { get; }
             DateTime creationdate { get; }
+            string DisplayPriority { get; }
+            string DisplayDone { get; }
         }
 
         public class Task : ITask
@@ -140,6 +142,21 @@ namespace ListaZadanFunkcjonalnosc
                         }
                 }
             }
+
+            public string DisplayPriority
+            {
+                get
+                {
+                    return priorities[priority];
+                }
+            }
+            public string DisplayDone
+            {
+                get
+                {
+                    return isdone ? "Done" : "";
+                }
+            }
         }
 
         public class SubTask : ITask
@@ -171,6 +188,21 @@ namespace ListaZadanFunkcjonalnosc
                 this.description = description;
                 this.isdone = isdone;
                 this.enddate = enddate;
+            }
+
+            public string DisplayPriority
+            {
+                get
+                {
+                    return "";
+                }
+            }
+            public string DisplayDone
+            {
+                get
+                {
+                    return isdone ? "Done" : "";
+                }
             }
         }
 
