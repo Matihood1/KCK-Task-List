@@ -64,7 +64,7 @@ namespace ListaRzeczyTUI
             }
         }
 
-        private void RenderUstr(ListView container, ConsoleDriver driver, ustring ustr, int col, int line, int width, int priority, DateTime date, bool selected, bool isdone)
+        private void RenderUstr(ListView container, ConsoleDriver driver, ustring ustr, int col, int line, int width, int priority, DateTime enddate, bool selected, bool isdone)
         {
             int used = 0;
             int index = 0;
@@ -72,7 +72,7 @@ namespace ListaRzeczyTUI
             {
                 SetColor(container, driver, (int)styles.normal, selected, selected ? Color.Green : Color.BrightGreen);
             }
-            else if(date <= DateTime.Now)
+            else if(enddate <= DateTime.Now)
             {
                 SetColor(container, driver, (int)styles.late, selected, Color.BrightRed);
             }

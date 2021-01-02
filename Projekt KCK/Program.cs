@@ -69,7 +69,7 @@ namespace ListaRzeczyTUI
                 Width = Dim.Fill() - 3
             };
             TaskPriorityField.SetSource(Tasks.priorities.Values.ToList());
-            TaskPriorityField.Text = "Medium";
+            TaskPriorityField.Text = Tasks.priorities[2];
 
             var TaskDescriptionField = new TextView()
             {
