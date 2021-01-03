@@ -62,8 +62,17 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="ManageSubTaskWindow.xaml.cs">
+      <DependentUpon>ManageSubTaskWindow.xaml</DependentUpon>
+    </Compile>
     <Compile Include="ManageTaskWindow.xaml.cs">
       <DependentUpon>ManageTaskWindow.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="SubTaskDetailsWindow.xaml.cs">
+      <DependentUpon>SubTaskDetailsWindow.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="TaskDetailsControl.xaml.cs">
+      <DependentUpon>TaskDetailsControl.xaml</DependentUpon>
     </Compile>
     <Compile Include="TasksControl.cs">
       <DependentUpon>TasksControl.xaml</DependentUpon>
@@ -81,7 +90,19 @@
       <DependentUpon>MainWindow.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
+    <Page Include="ManageSubTaskWindow.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="ManageTaskWindow.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="SubTaskDetailsWindow.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="TaskDetailsControl.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

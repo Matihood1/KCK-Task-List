@@ -154,7 +154,7 @@ namespace ListaZadanFunkcjonalnosc
             {
                 get
                 {
-                    return isdone ? "Done" : "";
+                    return isdone ? "✓" : "";
                 }
             }
         }
@@ -201,7 +201,7 @@ namespace ListaZadanFunkcjonalnosc
             {
                 get
                 {
-                    return isdone ? "Done" : "";
+                    return isdone ? "✓" : "";
                 }
             }
         }

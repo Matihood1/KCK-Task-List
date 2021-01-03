@@ -26,6 +26,7 @@ namespace ListaZadanGUI
     {
         TasksDBConnection DB;
         TasksControl TasksListUserControl;
+        TaskDetailsControl TaskDetailsUserControl;
         public MainWindow()
         {
             CultureInfo.CurrentCulture = new CultureInfo("pl-PL");
@@ -37,9 +38,16 @@ namespace ListaZadanGUI
             MainWindowContentControl.Content = TasksListUserControl;
         }
 
+        public void OpenTaskDetails(Tasks.Task selectedtask)
+        {
+            TaskDetailsUserControl = new TaskDetailsControl(DB, selectedtask);
+            MainWindowContentControl.Content = TaskDetailsUserControl;
+        }
+
         public void ReturnToTasksList()
         {
             MainWindowContentControl.Content = TasksListUserControl;
+            TaskDetailsUserControl = null;
         }
     }
 }
