@@ -31,7 +31,7 @@ namespace ListaZadanGUI
 
         private void Window_Loaded(object sender, RoutedEventArgs e)
         {
-            if(SelectedTask != null)
+            if (SelectedTask != null)
             {
                 this.Title = "Edit task " + SelectedTask.title;
                 TitleTextBox.Text = SelectedTask.title;
@@ -53,9 +53,9 @@ namespace ListaZadanGUI
 
         private void OKButton_Click(object sender, RoutedEventArgs e)
         {
-            if(TitleTextBox.Text.Length > 0)
+            if (TitleTextBox.Text.Length > 0)
             {
-                if(SelectedTask == null)
+                if (SelectedTask == null)
                 {
                     DB.AddTask(new Tasks.Task(TitleTextBox.Text, DescriptionTextBox.Text, EndDatePicker.SelectedDate ?? DateTime.Today.AddDays(1),
                         PriorityComboBox.SelectedIndex));

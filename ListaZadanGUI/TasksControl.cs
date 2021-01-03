@@ -115,13 +115,17 @@ namespace ListaZadanGUI
         {
             //ICollectionView dataview = CollectionViewSource.GetDefaultView(TasksListView.ItemsSource);
 
-            /*dataview*/TasksListView.Items.SortDescriptions.Clear();
-            /*dataview*/TasksListView.Items.SortDescriptions.Add(new SortDescription(sortby, direction));
+            /*dataview*/
+            TasksListView.Items.SortDescriptions.Clear();
+            /*dataview*/
+            TasksListView.Items.SortDescriptions.Add(new SortDescription(sortby, direction));
             if (!sortby.Equals("title") && !sortby.Equals("creationdate"))
             {
-                /*dataview*/TasksListView.Items.SortDescriptions.Add(new SortDescription("title", direction));
+                /*dataview*/
+                TasksListView.Items.SortDescriptions.Add(new SortDescription("title", direction));
             }
-            /*dataview*/TasksListView.Items.Refresh();
+            /*dataview*/
+            TasksListView.Items.Refresh();
         }
 
         private void TasksListView_SizeChanged(object sender, SizeChangedEventArgs e)
@@ -165,7 +169,7 @@ namespace ListaZadanGUI
             ManageTaskWindow managetaskwindow = new ManageTaskWindow(DB);
             managetaskwindow.Owner = Window.GetWindow(this);
             managetaskwindow.ShowDialog();
-            if(managetaskwindow.DialogResult == true)
+            if (managetaskwindow.DialogResult == true)
             {
                 Sort(GetSortString(lastheaderclickedcolumn), lastdirection);
                 //TasksListView.Items.Refresh();
@@ -174,7 +178,7 @@ namespace ListaZadanGUI
 
         private void EditTaskButton_Click(object sender, RoutedEventArgs e)
         {
-            if(TasksListView.SelectedItem != null)
+            if (TasksListView.SelectedItem != null)
             {
                 ManageTaskWindow managetaskwindow = new ManageTaskWindow(DB);
                 managetaskwindow.Owner = Window.GetWindow(this);

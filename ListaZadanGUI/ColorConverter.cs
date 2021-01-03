@@ -14,7 +14,7 @@ namespace ListaZadanGUI
         {
             if (value != null)
             {
-                if((DateTime)value <= DateTime.Now)
+                if ((DateTime)value <= DateTime.Now)
                 {
                     return true;
                 }
