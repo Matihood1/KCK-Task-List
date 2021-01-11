@@ -34,7 +34,7 @@ namespace ListaZadanGUI
             InitializeComponent();
 
             TasksListView.ItemsSource = Tasks.taskslist;
-            //Sort("creationdate", ListSortDirection.Descending);
+            Sort("creationdate", ListSortDirection.Descending);
             CreationDateColumn.HeaderTemplate = Resources["HeaderTemplateArrowDown"] as DataTemplate;
             lastheaderclickedcolumn = CreationDateColumn;
         }

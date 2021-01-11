@@ -631,6 +631,7 @@ namespace ListaRzeczyTUI
             Colors.ColorSchemes["Inactive"].HotNormal = Colors.ColorSchemes["Inactive"].Normal;
             Colors.ColorSchemes["Inactive"].HotFocus = Colors.ColorSchemes["Inactive"].Normal;
             int lastsort = 3;
+            Tasks.SortTasks(lastsort);
 
             var top = Application.Top;
             ListView TasksListView;
